@@ -1,5 +1,6 @@
 package com.example.basic;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -112,6 +113,8 @@ public class BasicController {
       @RequestParam(name = "name", required = false, defaultValue = "World") String name,
       Model model) {
     model.addAttribute("name", name);
+    model.addAttribute("myVar", 42);
+    model.addAttribute("myArray", Arrays.asList("toto", "titi"));
     return "greeting";
   }
 
