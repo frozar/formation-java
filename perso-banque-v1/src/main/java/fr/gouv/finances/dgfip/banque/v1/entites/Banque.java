@@ -70,7 +70,7 @@ public class Banque {
     String numComptePadded = Util.padLeftZeros(numCompteInt.toString(), 10);
     String cle = "99";
     CompteEpargne newCompteEpargne = new CompteEpargne(this.codeBanque,
-        codeGuichet, numComptePadded, cle, 0.0, taux);
+        codeGuichet, numComptePadded, cle, soldeInitial, taux);
     mapCompteAPersonne.put(newCompteEpargne, titulaire);
     return newCompteEpargne;
   }
@@ -103,7 +103,7 @@ public class Banque {
             + "+-----------------+--------------------------+----------------------+------------+");
     mapCompteAPersonne.forEach((compte, personne) -> {
       String compteType = compte.getClass()
-          .toString().equals( "class fr.gouv.finances.dgfip.banque.CompteEpargne")
+          .toString().equals( "class fr.gouv.finances.dgfip.banque.v1.entites.CompteEpargne")
               ? "Compte epargne"
               : "Courant courant";
       String fullName = String.format("%s %s", personne.getNom(),
