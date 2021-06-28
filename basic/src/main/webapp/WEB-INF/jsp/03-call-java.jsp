@@ -44,7 +44,7 @@
 				<%=com.example.basic.Utils.makeItLower("Hello World")%>
 			</div>
 			<div>
-				Thanks to the []page import="com.example.basic.Utils"], lower case
+				Thanks to the [page import="com.example.basic.Utils"], lower case
 				"Hello World":
 				<%=Utils.makeItLower("Hello World")%>
 			</div>

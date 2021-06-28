@@ -4,8 +4,10 @@
 
 <body>
 
-The student is confirmed: <%= request.getParameter("firstName") %> <%= request.getParameter("lastName") %> 
+The student is confirmed: <%= request.getParameter("prenom") %> <%= request.getParameter("nom") %> 
 <!-- A shortcut version here. -->
+<br />
+<br />
 The student is confirmed: ${param.prenom} ${param.nom}
 
 </body>
