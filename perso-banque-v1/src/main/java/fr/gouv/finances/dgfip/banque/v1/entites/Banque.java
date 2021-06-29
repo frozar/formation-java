@@ -102,10 +102,7 @@ public class Banque {
             + "| Type compte     | RIB                      | Titulaire            | Solde      |\n"
             + "+-----------------+--------------------------+----------------------+------------+");
     mapCompteAPersonne.forEach((compte, personne) -> {
-      String compteType = compte.getClass()
-          .toString().equals( "class fr.gouv.finances.dgfip.banque.v1.entites.CompteEpargne")
-              ? "Compte epargne"
-              : "Courant courant";
+      String compteType = compte.getType();
       String fullName = String.format("%s %s", personne.getNom(),
           personne.getPrenom());
       String paddedCompteType = Util.padRightSpaces(compteType, 15);

@@ -28,6 +28,8 @@ public abstract class CompteBancaire {
 
   public abstract Double calculerSolde();
 
+  public abstract String getType();
+
   public void afficherSyntheseOperations() {
     System.out.println(
         "Synthèse du compte: " + this.codeBanque + " " + this.codeGuichet + " " + this.numCompte + " " + this.cle);

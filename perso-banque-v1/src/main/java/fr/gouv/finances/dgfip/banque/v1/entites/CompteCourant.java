@@ -29,4 +29,9 @@ public class CompteCourant extends CompteBancaire {
     operations.add(newOperation);
     return newOperation;
   }
+
+  @Override
+  public String getType() {
+    return "Compte courant";
+  }
 }

@@ -39,4 +39,9 @@ public class CompteEpargne extends CompteBancaire {
       return newOperation;
     }
   }
+
+  @Override
+  public String getType() {
+    return "Compte epargne";
+  }
 }
