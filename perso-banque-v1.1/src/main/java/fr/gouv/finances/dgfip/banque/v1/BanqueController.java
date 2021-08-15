@@ -112,8 +112,10 @@ public class BanqueController implements WebMvcConfigurer {
 
   @GetMapping("/add-current-account-full")
   public String addAccount(ModelMap model) {
+    CompteCourant compteCourant = new CompteCourant();
+    compteCourant.setSolde(0.0);
     model.addAttribute("personne", new Personne());
-    model.addAttribute("compteCourant", new CompteCourant());
+    model.addAttribute("compteCourant", compteCourant);
     model.addAttribute("banque", banque);
 
     return "formAddCurrentAccountFull";
