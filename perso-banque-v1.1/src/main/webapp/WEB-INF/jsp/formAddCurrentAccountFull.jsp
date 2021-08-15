@@ -17,10 +17,10 @@
 
   <h1>Nouveau compte courant</h1>
 
-  <form action="add-current-account" method="POST">
+  <form action="add-current-account-full" method="POST">
     <div>
       <spring:bind path="personne.nom">
-        <label>${status.expression} : </label>
+        <label>Nom : </label>
         <input type="text" name="${status.expression}"
           value="${status.value}"
         >
@@ -34,7 +34,7 @@
 
     <div>
       <spring:bind path="personne.prenom">
-        <label>${status.expression} : </label>
+        <label>Prénom : </label>
         <input type="text" name="${status.expression}"
           value="${status.value}"
         >
@@ -59,7 +59,7 @@
 
     <div>
       <spring:bind path="compteCourant.codeGuichet">
-        <label>${status.expression} : </label>
+        <label>Code guichet : </label>
         <input type="text" name="${status.expression}"
           value="${status.value}"
         >
@@ -73,7 +73,7 @@
 
     <div>
       <spring:bind path="compteCourant.numCompte">
-        <label>${status.expression} : </label>
+        <label>Numéro de compte : </label>
         <input type="text" name="${status.expression}"
           value="${status.value}"
         >
@@ -87,7 +87,7 @@
 
     <div>
       <spring:bind path="compteCourant.cle">
-        <label>${status.expression} : </label>
+        <label>Clé : </label>
         <input type="text" name="${status.expression}"
           value="${status.value}"
         >
@@ -101,7 +101,7 @@
 
     <div>
       <spring:bind path="compteCourant.solde">
-        <label>${status.expression} : </label>
+        <label>Solde : </label>
         <input type="text" name="${status.expression}"
           value="${status.value}"
         >

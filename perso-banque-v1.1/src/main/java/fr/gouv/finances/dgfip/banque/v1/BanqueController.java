@@ -93,7 +93,6 @@ public class BanqueController implements WebMvcConfigurer {
   @GetMapping("/add-person-model-and-view")
   public String showForm(Model model) {
     Personne personne = new Personne();
-    personne.setPrenom("Nam Ha Minh");
     model.addAttribute("personne", personne);
 
     return "formAddPersonModelAndView";
@@ -131,7 +130,13 @@ public class BanqueController implements WebMvcConfigurer {
       @Valid @ModelAttribute("compteCourant") CompteCourant compteCourant,
       BindingResult resultCompte, Model model) {
     if (resultPersonne.hasErrors() || resultCompte.hasErrors()) {
-      return "formAddCurrentAccount";
+      // In case of error in the form, you have to bind the banque again to the
+      // model as it is not retrieve from the argument of this method.
+      // Otherwise, you get an exception:
+      // javax.servlet.jsp.JspTagException: Neither BindingResult nor plain
+      // target object for bean name 'codeBanque' available as request attribute
+      model.addAttribute("banque", banque);
+      return "formAddCurrentAccountFull";
     }
 
     try {
@@ -139,7 +144,7 @@ public class BanqueController implements WebMvcConfigurer {
           compteCourant.getCodeGuichet());
     } catch (CompteException e) {
       // As both Personne and CompteCourant models are valided,
-      // should never happen.
+      // this catch should never happen.
       e.printStackTrace();
     }
 
