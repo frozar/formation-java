@@ -21,7 +21,8 @@
             <c:out value="${adherent}" /> <br />
         </c:forEach>
         <br />
-        <button value="Voir"><a href="/add-person-model-and-view">Ajouter un adhérent</a></button>
+        <button><a href="/add-person-model-and-view">Ajouter un adhérent</a></button>
+        <button><a href="/add-current-account-full">Créer un compte courant</a></button>
 		
 	</div>
 

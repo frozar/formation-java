@@ -6,14 +6,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import fr.gouv.finances.dgfip.banque.v1.CompteException;
 import fr.gouv.finances.dgfip.banque.v1.Util;
 
 public abstract class CompteBancaire {
+//  @NotNull
   protected String codeBanque;
+
+  @NotBlank(message = "Code guichet ?")
   protected String codeGuichet;
+  
+  @NotBlank(message = "Numero de compte ?")
   protected String numCompte;
+  
+  @NotBlank(message = "Cle ?")
   protected String cle;
+  
+  @Min(value=0, message="Solde positif ?")  
   protected Double solde;
 
   public String getCodeBanque() {

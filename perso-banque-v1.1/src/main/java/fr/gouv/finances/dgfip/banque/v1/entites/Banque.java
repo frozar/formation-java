@@ -16,7 +16,7 @@ import fr.gouv.finances.dgfip.banque.v1.Util;
 
 public class Banque {
 
-  private final String codeBanque;
+  private String codeBanque;
 
   private HashMap<CompteBancaire, Personne> mapCompteAPersonne = new HashMap<CompteBancaire, Personne>();
   private HashMap<CarteBancaire, Pair<Personne, CompteBancaire>> mapCarteAPersonneCompteBancaire = new HashMap<CarteBancaire, Pair<Personne, CompteBancaire>>();
@@ -27,6 +27,10 @@ public class Banque {
   
   public HashMap<CompteBancaire, Personne> getMapCompteAPersonne() {
     return mapCompteAPersonne;
+  }
+
+  public void setCodeBanque(String codeBanque) {
+    this.codeBanque = codeBanque;
   }
 
   public String getCodeBanque() {

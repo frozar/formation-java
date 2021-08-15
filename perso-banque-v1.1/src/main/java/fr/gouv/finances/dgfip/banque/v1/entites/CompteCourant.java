@@ -10,6 +10,13 @@ public class CompteCourant extends CompteBancaire {
     super();
   }
 
+  @Override
+  public String toString() {
+    return "CompteCourant [codeBanque=" + codeBanque + ", codeGuichet="
+        + codeGuichet + ", numCompte=" + numCompte + ", cle=" + cle + ", solde="
+        + solde + "]";
+  }
+
   public CompteCourant(String codeBanque, String codeGuichet, String numCompte,
       String cle, Double solde) {
     super(codeBanque, codeGuichet, numCompte, cle, solde);

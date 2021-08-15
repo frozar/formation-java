@@ -1,12 +1,8 @@
 package fr.gouv.finances.dgfip.banque.v1;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 //import java.util.Map;
 
@@ -18,10 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import fr.gouv.finances.dgfip.banque.v1.entites.Banque;
@@ -34,25 +27,16 @@ import fr.gouv.finances.dgfip.banque.v1.services.SystemeBancaireInterface;
 @Controller
 public class BanqueController implements WebMvcConfigurer {
 
-//  private ApplicationContext context;
   private final Banque banque = new Banque("DGFiP");
+
+  @Autowired
+  BanqueServiceInterface banqueService;
 
   @Autowired
   PersonneServiceInterface personneService;
 
   @Autowired
   SystemeBancaireInterface systemeBancaireService;
-
-//  @Autowired
-//  public BanqueController(ApplicationContext context) {
-//    this.context = context;
-//  }
-
-  @Override
-  public void addViewControllers(ViewControllerRegistry registry) {
-    registry.addViewController("/formAddPersonModelAndView")
-        .setViewName("formAddPersonModelAndView");
-  }
 
   @RequestMapping("/")
   public String home(Model model) {
@@ -126,34 +110,40 @@ public class BanqueController implements WebMvcConfigurer {
     return "formResponseAddPersonModelAndView";
   }
 
-  @GetMapping("/add-current-account")
+  @GetMapping("/add-current-account-full")
   public String addAccount(ModelMap model) {
-    Personne personne = new Personne();
-    CompteCourant compteCourant = new CompteCourant();
-    model.addAttribute("personne", personne);
-    model.addAttribute("compte-courant", compteCourant);
+    model.addAttribute("personne", new Personne());
+    model.addAttribute("compteCourant", new CompteCourant());
+    model.addAttribute("banque", banque);
 
-    return "formAddCurrentAccount";
+    return "formAddCurrentAccountFull";
   }
 
-  @PostMapping("/add-current-account")
+  // NB: Don't dash for @ModelAttribute argument
+  // @ModelAttribute("compteCourant") : OK
+  // @ModelAttribute("compte-courant") : FAILED
+  @PostMapping("/add-current-account-full")
   public String addAccountSubmit(
       @Valid @ModelAttribute("personne") Personne personne,
       BindingResult resultPersonne,
-      @Valid @ModelAttribute("compte-courant") CompteCourant compteCourant,
-      BindingResult resultCompte,
-      Model model) {
-//    Personne personne = new Personne();
-//    CompteCourant compteCourant = new CompteCourant();
-//    model.addAttribute("personne", personne);
-//    model.addAttribute("compte-courant", compteCourant);
+      @Valid @ModelAttribute("compteCourant") CompteCourant compteCourant,
+      BindingResult resultCompte, Model model) {
     if (resultPersonne.hasErrors() || resultCompte.hasErrors()) {
-      System.out.println("resultPersonne: " + resultPersonne);
-      System.out.println("resultCompte: " + resultCompte);
       return "formAddCurrentAccount";
     }
 
-    return "formResponseAddCurrentAccount";
+    try {
+      banqueService.creerCompteCourant(banque, personne,
+          compteCourant.getCodeGuichet());
+    } catch (CompteException e) {
+      // As both Personne and CompteCourant models are valided,
+      // should never happen.
+      e.printStackTrace();
+    }
+
+    return "formResponseAddCurrentAccountFull";
   }
+
+//  banqueService.creerCompteCourant(maBanque, paulette, "1234");
 
 }
