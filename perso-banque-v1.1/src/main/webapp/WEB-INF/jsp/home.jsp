@@ -17,7 +17,7 @@
             <c:out value="${adherent.nom} ${adherent.prenom}" /> <br />
         </c:forEach>
         <br />
-        <a href="/add-person-model-and-view"><button>Ajouter un adhérent</button></a>
+        <a href="/synthese-compte"><button>Synthèse des comptes</button></a>
         <a href="/add-current-account"><button>Créer un compte courant</button></a>
         <a href="/add-current-account-full"><button>Créer un compte courant (full)</button></a>
 		

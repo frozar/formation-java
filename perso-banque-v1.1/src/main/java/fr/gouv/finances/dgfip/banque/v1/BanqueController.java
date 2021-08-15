@@ -1,5 +1,7 @@
 package fr.gouv.finances.dgfip.banque.v1;
 
+import java.util.HashMap;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import fr.gouv.finances.dgfip.banque.v1.entites.Banque;
+import fr.gouv.finances.dgfip.banque.v1.entites.CompteBancaire;
 import fr.gouv.finances.dgfip.banque.v1.entites.CompteCourant;
 import fr.gouv.finances.dgfip.banque.v1.entites.Personne;
 import fr.gouv.finances.dgfip.banque.v1.services.BanqueServiceInterface;
@@ -43,34 +45,12 @@ public class BanqueController implements WebMvcConfigurer {
     return "home";
   }
 
-  @GetMapping("/add-person")
-  public String addPerson() {
-    return "formAddPerson";
-  }
-
-  @GetMapping("/response-add-person")
-  public String responseAddPerson(
-      @RequestParam(name = "prenom", required = true) String prenom,
-      @RequestParam(name = "nom", required = true) String nom) {
-    return "formResponseAddPerson";
-  }
-
-  @GetMapping("/add-person-model-and-view")
-  public String showForm(Model model) {
-    Personne personne = new Personne();
-    model.addAttribute("personne", personne);
-
-    return "formAddPersonModelAndView";
-  }
-
-  @PostMapping("/add-person-model-and-view")
-  public String submitForm(@Valid @ModelAttribute("personne") Personne personne,
-      BindingResult bindingResult, Model model) {
-    if (bindingResult.hasErrors()) {
-      return "formAddPersonModelAndView";
-    }
-
-    return "formResponseAddPersonModelAndView";
+  @GetMapping("/synthese-compte")
+  public String syntheseCompte(Model model) {
+    HashMap<CompteBancaire, Personne> mapCompteAPersonne = banque
+        .getMapCompteAPersonne();
+    model.addAttribute("compteAPersonne", mapCompteAPersonne);
+    return "syntheseCompte";
   }
 
   @GetMapping("/add-current-account-full")
