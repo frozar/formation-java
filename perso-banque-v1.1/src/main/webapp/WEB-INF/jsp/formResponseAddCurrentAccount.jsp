@@ -1,6 +1,3 @@
-<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <html>
 
 <head>
@@ -27,16 +24,10 @@
     Solde : ${compteCourant.solde}
   </p>
 
+  <h3>
+    <a href="/">Home</a>
+  </h3>
 
-  <h2>A but pédagogique : détail technique</h2>
-  <p>
-    Tous les champs qui sont binded à cette vue sont disponible dans la
-    variable "param" :
-    <br />
-    ${param}
-  </p>
-  
-  <h3><a href="/">Home</a></h3>
 </body>
 
 </html>

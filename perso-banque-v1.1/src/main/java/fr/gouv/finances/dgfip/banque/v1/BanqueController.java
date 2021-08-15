@@ -3,9 +3,6 @@ package fr.gouv.finances.dgfip.banque.v1;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-//import java.util.Map;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import fr.gouv.finances.dgfip.banque.v1.entites.Banque;
@@ -40,14 +38,11 @@ public class BanqueController implements WebMvcConfigurer {
 
   @RequestMapping("/")
   public String home(Model model) {
-//    model.put("message", this.message);
     model.addAttribute("adherents",
         systemeBancaireService.listeAdherent(banque));
     return "home";
   }
 
-//  @RequestMapping(value = "/add-person", method = RequestMethod.GET)
-//  @RequestMapping("/addPerson")
   @GetMapping("/add-person")
   public String addPerson() {
     return "formAddPerson";
@@ -57,38 +52,8 @@ public class BanqueController implements WebMvcConfigurer {
   public String responseAddPerson(
       @RequestParam(name = "prenom", required = true) String prenom,
       @RequestParam(name = "nom", required = true) String nom) {
-    System.out.println("prenom: " + prenom);
-    System.out.println("nom: " + nom);
     return "formResponseAddPerson";
   }
-
-////  public ModelAndView addPersonModelAndView() {
-////    return new ModelAndView("formAddPersonModelAndView", "person",
-////        personneService.creerPersonne("", ""));
-////  }
-//  @GetMapping("/add-person-model-and-view")
-//  public String addPersonModelAndView(Personne personne) {
-//    return "formAddPersonModelAndView";
-//  }
-//
-//  // @RequestMapping(value = "/response-add-person-model-and-view", method =
-//  // RequestMethod.POST)
-//  @PostMapping("/response-add-person-model-and-view")
-////  public ModelAndView addPersonModelAndView(
-//  public String addPersonModelAndView(@Valid Personne personne,
-//      BindingResult result) {
-//    if (result.hasErrors()) {
-////      return new ModelAndView("formAddPersonModelAndView", "person",
-////          personne);
-//      return "formAddPersonModelAndView";
-//    }
-////    model.addAttribute("nom", personne.getNom());
-////    model.addAttribute("prenom", personne.getPrenom());
-////    return new ModelAndView("formResponseAddPersonModelAndView", "person",
-////        personne);
-////    return "redirect:/formResponseAddPersonModelAndView";
-//    return "formResponseAddPersonModelAndView";
-//  }
 
   @GetMapping("/add-person-model-and-view")
   public String showForm(Model model) {
@@ -102,7 +67,6 @@ public class BanqueController implements WebMvcConfigurer {
   public String submitForm(@Valid @ModelAttribute("personne") Personne personne,
       BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
-      System.out.println("bindingResult: " + bindingResult);
       return "formAddPersonModelAndView";
     }
 
@@ -110,7 +74,7 @@ public class BanqueController implements WebMvcConfigurer {
   }
 
   @GetMapping("/add-current-account-full")
-  public String addAccount(ModelMap model) {
+  public String addAccountFull(ModelMap model) {
     CompteCourant compteCourant = new CompteCourant();
     compteCourant.setSolde(0.0);
     model.addAttribute("personne", new Personne());
@@ -124,7 +88,7 @@ public class BanqueController implements WebMvcConfigurer {
   // @ModelAttribute("compteCourant") : OK
   // @ModelAttribute("compte-courant") : FAILED
   @PostMapping("/add-current-account-full")
-  public String addAccountSubmit(
+  public String addAccountFullSubmit(
       @Valid @ModelAttribute("personne") Personne personne,
       BindingResult resultPersonne,
       @Valid @ModelAttribute("compteCourant") CompteCourant compteCourant,
@@ -142,15 +106,43 @@ public class BanqueController implements WebMvcConfigurer {
     try {
       banqueService.creerCompteCourant(banque, personne,
           compteCourant.getCodeGuichet());
+      return "formResponseAddCurrentAccountFull";
     } catch (CompteException e) {
       // As both Personne and CompteCourant models are valided,
       // this catch should never happen.
       e.printStackTrace();
+      return null;
     }
-
-    return "formResponseAddCurrentAccountFull";
   }
 
-//  banqueService.creerCompteCourant(maBanque, paulette, "1234");
+  @GetMapping("/add-current-account")
+  public ModelAndView showForm() {
+    return new ModelAndView("formAddCurrentAccount", "compteCourantForm",
+        new CompteCourantForm());
+  }
 
+  @PostMapping("/add-current-account")
+  public String addAccountSubmit(
+      @Valid @ModelAttribute("compteCourantForm") CompteCourantForm compteCourantForm,
+      BindingResult resultCompte, Model model) {
+    if (resultCompte.hasErrors()) {
+      return "formAddCurrentAccount";
+    }
+
+    try {
+      Personne personne = new Personne(compteCourantForm.getNom(),
+          compteCourantForm.getPrenom());
+      // Effectively create a current accompte
+      CompteCourant compteCourant = banqueService.creerCompteCourant(banque,
+          personne, compteCourantForm.getCodeGuichet());
+      model.addAttribute("personne", personne);
+      model.addAttribute("compteCourant", compteCourant);
+      return "formResponseAddCurrentAccount";
+    } catch (CompteException e) {
+      // As both Personne and CompteCourant models are valided,
+      // this catch should never happen.
+      e.printStackTrace();
+      return null;
+    }
+  }
 }
