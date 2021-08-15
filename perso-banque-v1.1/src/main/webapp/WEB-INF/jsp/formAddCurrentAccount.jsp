@@ -15,14 +15,8 @@
 
   <h1>Nouveau compte courant</h1>
 
-  Param: ${param}
-  <br />
-  Status: ${status}
-  <br />
-
-
   <sf:form action="add-current-account" method="POST"
-    modelAttribute="compteCourant"
+    modelAttribute="compteCourantForm"
   >
     <div>
       <sf:label path="nom">Nom : </sf:label>

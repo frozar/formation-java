@@ -1,13 +1,6 @@
 package fr.gouv.finances.dgfip.banque.v1.entites;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
-//@NotEmpty
-//@NotNull
-//@NotBlank
 
 public class Personne {
 
@@ -15,9 +8,10 @@ public class Personne {
   private String nom;
   @NotBlank(message = "Prénom ?")
   private String prenom;
-  
-  public Personne() {}
-  
+
+  public Personne() {
+  }
+
   public Personne(String nom, String prenom) {
     this.nom = nom;
     this.prenom = prenom;
@@ -42,5 +36,37 @@ public class Personne {
   @Override
   public String toString() {
     return "Personne [nom=" + nom + ", prenom=" + prenom + "]";
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + nom.hashCode();
+    result = prime * result + prenom.hashCode();
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+
+    Personne other = (Personne) obj;
+    if (!nom.equals(other.nom)) {
+      return false;
+    }
+    if (!prenom.equals(other.prenom)) {
+      return false;
+    }
+
+    return true;
   }
 }

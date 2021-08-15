@@ -1,8 +1,10 @@
 package fr.gouv.finances.dgfip.banque.v1.services.impl;
 
-import java.util.List;
+import static java.util.stream.Collectors.toSet;
+
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -34,8 +36,12 @@ public class SystemeBancaire implements SystemeBancaireInterface {
 
   @Override
   public List<Personne> listeAdherent(Banque banque) {
-    return banque.getMapCompteAPersonne().values().stream()
-        .collect(Collectors.toCollection(ArrayList::new));
+    Set<Personne> persons = banque.getMapCompteAPersonne().values().stream()
+        .collect(toSet());
+    for (Personne person : persons) {
+      System.out.println(person);
+    }
+    return new ArrayList<>(persons);
 
   }
 
