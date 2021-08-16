@@ -92,13 +92,13 @@ public class BanqueController implements WebMvcConfigurer {
 
   @GetMapping("/add-current-account")
   public ModelAndView addAccount() {
-    return new ModelAndView("formAddCurrentAccount", "compteCourantForm",
-        new CompteCourantForm());
+    return new ModelAndView("formAddCurrentAccount", "addCompteCourantForm",
+        new AddCompteCourantForm());
   }
 
   @PostMapping("/add-current-account")
   public String addAccountSubmit(
-      @Valid @ModelAttribute("compteCourantForm") CompteCourantForm compteCourantForm,
+      @Valid @ModelAttribute("addCompteCourantForm") AddCompteCourantForm compteCourantForm,
       BindingResult resultCompte, Model model) {
     if (resultCompte.hasErrors()) {
       return "formAddCurrentAccount";
@@ -134,7 +134,7 @@ public class BanqueController implements WebMvcConfigurer {
 
   // Documentation about redirection:
   // https://www.baeldung.com/spring-redirect-and-forward
-  @GetMapping("/delete-current-account")
+  @GetMapping("/delete-account")
   public RedirectView deleteAccount(
       @RequestParam("codeGuichet") String codeGuichet,
       @RequestParam("numCompte") String numCompte,

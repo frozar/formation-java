@@ -24,6 +24,10 @@ table, th, td {
     Nombre de comptes : ${fn:length(compteAPersonne)}
     <br />
 
+<!-- 
+    Documentation link about JSTL if tag:
+    https://javarevisited.blogspot.com/2013/02/5-jstl-core-if-tag-examples-in-jsp.html
+ -->
     <c:if test="${fn:length(compteAPersonne) != 0}">
       <table style="width: 800px">
         <tr>
@@ -59,7 +63,7 @@ table, th, td {
             </th>
             <th style="font-weight: normal;">
               <a
-                href="/delete-current-account?codeGuichet=${entry.key.codeGuichet}&numCompte=${entry.key.numCompte}"
+                href="/delete-account?codeGuichet=${entry.key.codeGuichet}&numCompte=${entry.key.numCompte}"
               >
                 <img src="trash-icon.jpg" style="width: 16px;" />
               </a>
