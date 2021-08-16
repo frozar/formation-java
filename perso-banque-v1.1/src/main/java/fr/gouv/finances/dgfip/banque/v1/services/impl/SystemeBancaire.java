@@ -38,9 +38,6 @@ public class SystemeBancaire implements SystemeBancaireInterface {
   public List<Personne> listeAdherent(Banque banque) {
     Set<Personne> persons = banque.getMapCompteAPersonne().values().stream()
         .collect(toSet());
-    for (Personne person : persons) {
-      System.out.println(person);
-    }
     return new ArrayList<>(persons);
 
   }
