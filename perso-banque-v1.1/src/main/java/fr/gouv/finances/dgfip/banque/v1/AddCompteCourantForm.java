@@ -3,7 +3,7 @@ package fr.gouv.finances.dgfip.banque.v1;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
-public class CompteCourantForm {
+public class AddCompteCourantForm {
   @NotBlank(message = "Nom ?")
   private String nom;
 
