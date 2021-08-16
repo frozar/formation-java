@@ -24,7 +24,7 @@ public class Banque {
   public Banque(String codeBanque) {
     this.codeBanque = codeBanque;
   }
-  
+
   public HashMap<CompteBancaire, Personne> getMapCompteAPersonne() {
     return mapCompteAPersonne;
   }
@@ -43,7 +43,7 @@ public class Banque {
 
   public CompteCourant creerCompteCourant(Personne titulaire,
       String codeGuichet, Double soldeInitial) throws CompteException {
-    if(soldeInitial < 0) {
+    if (soldeInitial < 0) {
       throw new CompteException("Solde initial négatif");
     }
     Integer numCompteInt = mapCompteAPersonne.size();
@@ -67,11 +67,12 @@ public class Banque {
   }
 
   public CompteEpargne creerCompteEpargne(Personne titulaire,
-      String codeGuichet, Double soldeInitial, Double taux) throws CompteException{
-    if(soldeInitial < 0) {
+      String codeGuichet, Double soldeInitial, Double taux)
+      throws CompteException {
+    if (soldeInitial < 0) {
       throw new CompteException("Solde initial négatif");
     }
-    if(taux < 0) {
+    if (taux < 0) {
       throw new CompteException("Taux d'épargne négatif");
     }
     Integer numCompteInt = mapCompteAPersonne.size();
@@ -81,6 +82,19 @@ public class Banque {
         codeGuichet, numComptePadded, cle, soldeInitial, taux);
     mapCompteAPersonne.put(newCompteEpargne, titulaire);
     return newCompteEpargne;
+  }
+
+  public Boolean supprimerCompte(String codeGuichet, String numCompte) {
+    Boolean res = false;
+    for (CompteBancaire compte : mapCompteAPersonne.keySet()) {
+      if (compte.codeGuichet.equals(codeGuichet)
+          && compte.numCompte.equals(numCompte)) {
+        mapCompteAPersonne.remove(compte);
+        res = true;
+        break;
+      }
+    }
+    return res;
   }
 
   public CarteBancaire creerCarte(Personne titulaire, CompteBancaire compte) {

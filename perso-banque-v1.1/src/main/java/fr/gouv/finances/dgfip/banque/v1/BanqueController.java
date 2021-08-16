@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import fr.gouv.finances.dgfip.banque.v1.entites.Banque;
 import fr.gouv.finances.dgfip.banque.v1.entites.CompteBancaire;
@@ -43,14 +46,6 @@ public class BanqueController implements WebMvcConfigurer {
     model.addAttribute("adherents",
         systemeBancaireService.listeAdherent(banque));
     return "home";
-  }
-
-  @GetMapping("/synthese-compte")
-  public String syntheseCompte(Model model) {
-    HashMap<CompteBancaire, Personne> mapCompteAPersonne = banque
-        .getMapCompteAPersonne();
-    model.addAttribute("compteAPersonne", mapCompteAPersonne);
-    return "syntheseCompte";
   }
 
   @GetMapping("/add-current-account-full")
@@ -96,7 +91,7 @@ public class BanqueController implements WebMvcConfigurer {
   }
 
   @GetMapping("/add-current-account")
-  public ModelAndView showForm() {
+  public ModelAndView addAccount() {
     return new ModelAndView("formAddCurrentAccount", "compteCourantForm",
         new CompteCourantForm());
   }
@@ -125,4 +120,30 @@ public class BanqueController implements WebMvcConfigurer {
       return null;
     }
   }
+
+  @GetMapping("/synthese-compte")
+  public String syntheseCompte(Model model,
+      @ModelAttribute("error") String error) {
+    HashMap<CompteBancaire, Personne> mapCompteAPersonne = banque
+        .getMapCompteAPersonne();
+
+    model.addAttribute("error", error);
+    model.addAttribute("compteAPersonne", mapCompteAPersonne);
+    return "syntheseCompte";
+  }
+
+  // Documentation about redirection:
+  // https://www.baeldung.com/spring-redirect-and-forward
+  @GetMapping("/delete-current-account")
+  public RedirectView deleteAccount(
+      @RequestParam("codeGuichet") String codeGuichet,
+      @RequestParam("numCompte") String numCompte,
+      RedirectAttributes attributes) {
+    Boolean isDeleted = banque.supprimerCompte(codeGuichet, numCompte);
+    if (!isDeleted) {
+      attributes.addFlashAttribute("error", "Compte non supprimé.");
+    }
+    return new RedirectView("synthese-compte");
+  }
+
 }
