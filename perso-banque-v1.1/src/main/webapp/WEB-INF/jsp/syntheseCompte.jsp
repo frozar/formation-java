@@ -17,13 +17,6 @@ table, th, td {
 
   <div>
     <br />
-    <%-- 
-		Nombre d'adhérents : ${fn:length(adherents)}
-        <br />
-        <c:forEach items="${adherents}" var="adherent">
-            <c:out value="${adherent.nom} ${adherent.prenom}" /> <br />
-        </c:forEach>
- --%>
     Nombre de comptes : ${fn:length(compteAPersonne)}
     <br />
 
@@ -37,9 +30,6 @@ table, th, td {
       <c:forEach items="${compteAPersonne}" var="entry">
         <tr>
           <th style="font-weight: normal;">
-            <%--           
-            Key = ${entry.key}
- --%>
             <c:choose>
               <c:when
                 test="${entry.key['class'].simpleName == 'CompteCourant'}"
@@ -52,9 +42,6 @@ table, th, td {
             </c:choose>
           </th>
           <th style="font-weight: normal;">
-            <%-- 
-          value = ${entry.value}
- --%>
             ${entry.key.codeBanque} ${entry.key.codeGuichet}
             ${entry.key.numCompte} ${entry.key.cle}
           </th>
@@ -65,18 +52,6 @@ table, th, td {
       </c:forEach>
     </table>
     <br />
-
-    <!-- 
-    <a href="/synthese-compte">
-      <button>Synthèse des comptes</button>
-    </a>
-    <a href="/add-current-account">
-      <button>Créer un compte courant</button>
-    </a>
-    <a href="/add-current-account-full">
-      <button>Créer un compte courant (full)</button>
-    </a>
- -->
     <h3>
       <a href="/">Home</a>
     </h3>
