@@ -10,5 +10,8 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
   List<Customer> findByLastName(String lastName);
 
+  // TODO: uncomment to generate request by firstname
+  // List<Customer> findByFirstName(String firstName);
+
   Customer findById(long id);
 }
