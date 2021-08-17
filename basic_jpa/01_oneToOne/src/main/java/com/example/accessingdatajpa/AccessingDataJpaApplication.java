@@ -34,6 +34,19 @@ public class AccessingDataJpaApplication {
       communeRepository.save(saintDenis);
       communeRepository.save(saintBenoit);
 
+      try {
+        Commune saintBenoit2 = new Commune("Saint Benoit 2");
+        Maire maireSaintBenoit2 = new Maire("SELLY", "Patrice");
+        saintBenoit2.setMaire(maireSaintBenoit2);
+        // saintBenoit2.setMaire(maireSaintBenoit);
+//        Maire maireSaintBenoit2 = maireRepository.findById(2L);
+//        saintBenoit2.setMaire(maireSaintBenoit2);
+
+        communeRepository.save(saintBenoit2);
+      } catch (Exception e) {
+        log.error("exception: " + e);
+      }
+
       // fetch all customers
       log.info("Communes found with findAll():");
       log.info("-------------------------------");
@@ -44,7 +57,6 @@ public class AccessingDataJpaApplication {
 
       Commune toDeleteCommune = communeRepository.findById(1L);
       communeRepository.delete(toDeleteCommune);
-      maireRepository.delete(toDeleteCommune.getMaire());
 
       // fetch all customers
       log.info("Communes after delete:");
@@ -64,12 +76,11 @@ public class AccessingDataJpaApplication {
       communeRepository.save(commune);
 
       // fetch all customers
-      log.info("Communes after update:");
+      log.info("Communes after setNom:");
       log.info("-------------------------------");
       for (Commune c : communeRepository.findAll()) {
         log.info("commune : " + c);
       }
-      log.info("");
 
       commune.setNom("Saint Benoit");
       communeRepository.save(commune);
@@ -82,23 +93,23 @@ public class AccessingDataJpaApplication {
       }
       log.info("");
 
-      // fetch an individual commune by ID
-      commune = communeRepository.findById(2L);
-      log.info("Commune found with findById(2L):");
-      log.info("--------------------------------");
-      log.info(commune.toString());
-      log.info("");
-
-      // fetch communes by nom
-      log.info("Commune found with findByNom('Saint Benoit'):");
-      log.info("--------------------------------------------");
-      communeRepository.findByNom("Saint Benoit").forEach(c -> {
-        log.info(c.toString());
-      });
-      // for (Commune commune : repository.findByNome("Saint Benoit")) {
-      // log.info(commune.toString());
-      // }
-      log.info("");
+//      // fetch an individual commune by ID
+//      commune = communeRepository.findById(2L);
+//      log.info("Commune found with findById(2L):");
+//      log.info("--------------------------------");
+//      log.info(commune.toString());
+//      log.info("");
+//
+//      // fetch communes by nom
+//      log.info("Commune found with findByNom('Saint Benoit'):");
+//      log.info("--------------------------------------------");
+//      communeRepository.findByNom("Saint Benoit").forEach(c -> {
+//        log.info(c.toString());
+//      });
+//      // for (Commune commune : repository.findByNome("Saint Benoit")) {
+//      // log.info(commune.toString());
+//      // }
+//      log.info("");
     };
   }
 

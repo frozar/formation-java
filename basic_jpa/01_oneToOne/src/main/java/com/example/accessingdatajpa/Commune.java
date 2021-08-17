@@ -1,6 +1,7 @@
 package com.example.accessingdatajpa;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,13 +14,17 @@ public class Commune {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(unique = true)
   private String nom;
 
   // L'annotation "@OneToOne" permet de créer la relation entre Commune et
   // Maire.
   // L'argument "cascade" de "@OneToOne" décrit le comportement pour un champ de
   // type bean lors d'une écriture
-  @OneToOne(cascade = CascadeType.PERSIST)
+  // CascadeType.PERSIST : écrit le Maire associé lors d'un save()
+  // CascadeType.REMOVE : supprime le Maire associé lors d'un delete()
+  @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
   private Maire maire;
 
   protected Commune() {

@@ -5,6 +5,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+// Ajoute une contrainte sur la table en DB pour éviter d'avoir des doublons 
+// en DB. Lien de documentation :
+// https://www.baeldung.com/jpa-unique-constraints
+@Table(uniqueConstraints = {
+    @UniqueConstraint(name = "Unique_Nom_And_Prenom", columnNames = { "nom",
+        "prenom" }) })
 
 @Entity
 public class Maire {
@@ -57,8 +66,9 @@ public class Maire {
 
   @Override
   public String toString() {
-    return "Maire [id=" + id + ", nom=" + nom + ", prenom=" + prenom
-        + ", commune=" + commune + "]";
+//    return "Maire [id=" + id + ", nom=" + nom + ", prenom=" + prenom
+//        + ", commune=" + commune + "]";
+    return "Maire [id=" + id + ", nom=" + nom + ", prenom=" + prenom + "]";
   }
 
 }
