@@ -21,7 +21,7 @@ public class AccessingDataJpaApplication {
   @Bean
   public CommandLineRunner demo(CommuneRepository communeRepository) {
     return (args) -> {
-      // save a few customers
+      // save a few communes
       Commune saintDenis = new Commune("Saint Denis");
       Maire maireSaintDenis = new Maire("BAREIGTS", "Ericka");
       saintDenis.setMaire(maireSaintDenis);

@@ -22,7 +22,7 @@ public class AccessingDataJpaApplication {
   public CommandLineRunner demo(CommuneRepository communeRepository,
       MaireRepository maireRepository) {
     return (args) -> {
-      // save a few customers
+      // save a few communes
       Commune saintDenis = new Commune("Saint Denis");
       Maire maireSaintDenis = new Maire("BAREIGTS", "Ericka");
       saintDenis.setMaire(maireSaintDenis);

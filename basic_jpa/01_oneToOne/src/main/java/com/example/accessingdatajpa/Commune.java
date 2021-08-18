@@ -15,6 +15,7 @@ public class Commune {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  // unique: each Commune must have a different name in DB
   @Column(unique = true)
   private String nom;
 
