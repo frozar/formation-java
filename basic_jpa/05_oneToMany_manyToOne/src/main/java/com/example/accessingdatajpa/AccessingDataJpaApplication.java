@@ -55,33 +55,41 @@ public class AccessingDataJpaApplication {
       log.info("tentative 1");
       log.info(" => n'est pas ajouter au département, "
           + "génére une commune avec un id null");
-      Commune sainteRose = new Commune("Sainte Rose");
-      sainteRose.setDepartement(reunion);
-      log.info(sainteRose.toString());
-      communes.add(sainteRose);
-      try {
-        departementRepository.save(reunion);
-      } catch (Exception e) {
-        log.error(e.getMessage());
-      }
-      displayDB();
+//      Commune sainteRose = new Commune("Sainte Rose");
+//      sainteRose.setDepartement(reunion);
+//      log.info(sainteRose.toString());
+//      communes.add(sainteRose);
+////      try {
+////        departementRepository.save(reunion);
+////      } catch (Exception e) {
+////        log.error(e.getMessage());
+////      }
+////      // displayDB();
 
       log.info("tentative 2");
       log.info(" => n'est pas ajouter au département, "
           + "mais présent dans la table des communes.");
-      communeRepository.save(sainteRose);
-      departementRepository.save(reunion);
-      displayDB();
-      communeRepository.delete(sainteRose);
-      displayDB();
+//      communeRepository.save(sainteRose);
+//      departementRepository.save(reunion);
+//      displayDB();
+//      communeRepository.delete(sainteRose);
+//      displayDB();
 
       log.info("tentative 3");
       log.info(" => ajout correctement la commune 'Sainte Rose'");
+      // Récupération du département
       Departement run = departementRepository.findById(1L).get();
       Set<Commune> runCommunes = run.getCommunes();
-      sainteRose = new Commune("Sainte Rose");
+
+      // Création de la commune à ajouter
+      Commune sainteRose = new Commune("Sainte Rose");
       sainteRose.setDepartement(run);
+
+      // Enregistrement de la commune en DB
       communeRepository.save(sainteRose);
+      log.info(sainteRose.toString());
+
+      // Association de la commune au département et enregistrement en DB
       runCommunes.add(sainteRose);
       departementRepository.save(run);
       displayDB();

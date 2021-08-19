@@ -15,28 +15,28 @@ public class DepartementServiceImpl implements DepartementService {
   @Autowired
   private DepartementRepository departementRepository;
 
-  public Departement addCommune(String departement, String commune) {
-    Departement dep = departementRepository.findByNom(departement);
-    if (dep == null)
+  public Departement addCommune(String departementNom, String communeNom) {
+    Departement departement = departementRepository.findByNom(departementNom);
+    if (departement == null)
       return null;
-    Commune com = new Commune(commune);
-    com.setDepartement(dep);
-    communeRepository.save(com);
-    dep.getCommunes().add(com);
-    departementRepository.save(dep);
-    return dep;
+    Commune commune = new Commune(communeNom);
+    commune.setDepartement(departement);
+    communeRepository.save(commune);
+    departement.getCommunes().add(commune);
+    departementRepository.save(departement);
+    return departement;
   }
 
-  public Departement deleteCommune(String departement, String commune) {
-    Departement dep = departementRepository.findByNom(departement);
-    if (dep == null)
+  public Departement deleteCommune(String departementNom, String communeNom) {
+    Departement departement = departementRepository.findByNom(departementNom);
+    if (departement == null)
       return null;
 
-    Set<Commune> res = dep.getCommunes().stream()
-        .filter(c -> !c.getNom().equals(commune)).collect(Collectors.toSet());
-    dep.setCommunes(res);
+    Set<Commune> res = departement.getCommunes().stream()
+        .filter(c -> !c.getNom().equals(communeNom)).collect(Collectors.toSet());
+    departement.setCommunes(res);
 
-    departementRepository.save(dep);
-    return dep;
+    departementRepository.save(departement);
+    return departement;
   }
 }

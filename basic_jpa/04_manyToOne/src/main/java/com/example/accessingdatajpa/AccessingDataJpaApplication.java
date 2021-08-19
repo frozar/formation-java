@@ -67,7 +67,6 @@ public class AccessingDataJpaApplication {
       log.info(" => ajout correctement la commune 'Sainte Rose'");
       Departement run = departementRepository.findById(1L).get();
       Set<Commune> runCommunes = run.getCommunes();
-      communeRepository.save(sainteRose);
       runCommunes.add(sainteRose);
       departementRepository.save(run);
       displayDB();

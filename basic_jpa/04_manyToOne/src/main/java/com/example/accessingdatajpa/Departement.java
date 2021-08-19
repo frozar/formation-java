@@ -47,7 +47,6 @@ public class Departement {
     this.nom = nom;
   }
 
-  // TODO: copie defensive
   public Set<Commune> getCommunes() {
     return communes;
   }

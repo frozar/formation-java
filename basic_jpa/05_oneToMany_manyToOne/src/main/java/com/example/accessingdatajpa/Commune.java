@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -23,7 +22,6 @@ public class Commune {
   // L'annotation "@ManyToOne" permet de créer la relation entre Commune et
   // Departement.
   @ManyToOne
-  @JoinColumn(name = "DEPARTEMENT_ID", nullable = false, updatable = false)
   Departement departement;
 
   protected Commune() {
