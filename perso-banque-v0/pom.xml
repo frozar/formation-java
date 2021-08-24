@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.gouv.finances.dgfip</groupId>
-	<artifactId>banque</artifactId>
+	<artifactId>perso-banque-v0</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>banque</name>
@@ -12,7 +12,7 @@
     <properties>
         <java.version>11</java.version>
     </properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
