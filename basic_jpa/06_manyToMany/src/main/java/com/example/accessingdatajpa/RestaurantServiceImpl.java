@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,10 +39,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         coms.add(new Commune(communeNom));
       } else {
         coms.add(researchCommune.get(0));
-        // Existing commune
-        Commune existingCommune = researchCommune.get(0);
-        existingCommune.getRestaurants().add(restau);
-        communeRepository.save(existingCommune);
       }
     }
 
@@ -66,7 +63,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     Commune commune = researchCommune.isEmpty() ? new Commune(communeNom)
         : researchCommune.get(0);
 
-    commune.getRestaurants().add(restaurant);
     communeRepository.save(commune);
 
     restaurant.getCommunes().add(commune);
@@ -75,27 +71,23 @@ public class RestaurantServiceImpl implements RestaurantService {
     return restaurant;
   }
 
-  private void deleteCommeIfIsOrphan(String communeNom) {
-    // Check if a commune argument is orphan
-    Boolean isOrphan = true;
-    for (Restaurant r : restaurantRepository.findAll()) {
-      for (Commune c : r.getCommunes()) {
-        isOrphan &= !c.getNom().equals(communeNom);
-      }
-      if (isOrphan) {
-        break;
-      }
+  @Override
+  public Restaurant deleteCommune(String restaurantNom, String communeNom) {
+    // Split the delete operation of a commune (slave side of relation ship) in
+    // 2 transactions.
+    Restaurant restaurant = deleteCommuneInRestaurant(restaurantNom,
+        communeNom);
+
+    if (restaurant != null) {
+      deleteOrphanCommune(communeNom);
     }
 
-    // Remove a commune if it's an orphan commune
-    if (isOrphan) {
-      communeRepository.deleteByNom(communeNom);
-    }
+    return restaurant;
   }
 
-  @Override
   @Transactional
-  public Restaurant deleteCommune(String restaurantNom, String communeNom) {
+  private Restaurant deleteCommuneInRestaurant(String restaurantNom,
+      String communeNom) {
     // If restaurantNom doesn't match with any restaurant in DB, exit
     List<Restaurant> researchRestaurant = restaurantRepository
         .findByNom(restaurantNom);
@@ -119,46 +111,48 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     restaurantRepository.save(restaurant);
-
-//    // Check if a commune argument is orphan
-//    Boolean isOrphan = true;
-//    for (Restaurant r : restaurantRepository.findAll()) {
-//      for (Commune c : r.getCommunes()) {
-//        isOrphan &= !c.getNom().equals(communeNom);
-//      }
-//      if (isOrphan) {
-//        break;
-//      }
-//    }
-//
-//    // Remove a commune if it's an orphan commune
-//    if (isOrphan) {
-//      communeRepository.deleteByNom(communeNom);
-//    }
-
-    deleteCommeIfIsOrphan(communeNom);
-
     return restaurant;
   }
 
+  @Transactional(value = TxType.REQUIRES_NEW)
+  private void deleteOrphanCommune(String communeNom) {
+    List<Commune> researchCommune = communeRepository.findByNom(communeNom);
+    if (!researchCommune.isEmpty()) {
+      Commune commune = researchCommune.get(0);
+      if (commune.getRestaurants().isEmpty()) {
+        communeRepository.delete(commune);
+      }
+    }
+  }
+
   @Override
-  @Transactional
   public Boolean deleteRestaurant(String restaurantNom) {
     // If restaurantNom doesn't match with any restaurant in DB, exit
     List<Restaurant> researchRestaurant = restaurantRepository
         .findByNom(restaurantNom);
+
     if (researchRestaurant.isEmpty()) {
       return false;
     }
 
     Restaurant restaurant = researchRestaurant.get(0);
-    restaurantRepository.deleteById(restaurant.getId());
 
-    for (Commune c : restaurant.getCommunes()) {
-      deleteCommeIfIsOrphan(c.getNom());
-    }
+    deleteRestaurantOnly(restaurant);
+
+    deleteRestaurantOrphanCommune(restaurant);
 
     return true;
   }
 
+  @Transactional
+  private void deleteRestaurantOnly(Restaurant restaurant) {
+    restaurantRepository.delete(restaurant);
+  }
+
+  @Transactional(TxType.REQUIRES_NEW)
+  private void deleteRestaurantOrphanCommune(Restaurant restaurant) {
+    for (Commune c : restaurant.getCommunes()) {
+      deleteOrphanCommune(c.getNom());
+    }
+  }
 }

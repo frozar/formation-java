@@ -30,6 +30,13 @@ public class CommuneServiceImpl implements CommuneService {
     // Remove commune from Commune Table
     communeRepository.deleteByNom(communeNom);
 
+    // Remove restaurant if no associated commune
+    for (Restaurant r : restaurantRepository.findAll()) {
+      if (r.getCommunes().isEmpty()) {
+        restaurantRepository.delete(r);
+      }
+    }
+
     return true;
   }
 

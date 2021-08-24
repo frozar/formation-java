@@ -54,18 +54,18 @@ public class AccessingDataJpaApplication {
 
       log.info(
           "####### Création d'un 2ième restaurant qui partage des communes avec le 1er");
-      log.info("tentative 1");
-      log.info(" => le restaurant n'est pas créé, "
-          + "les variables com0 et com2 ayant déjà était utilisées précédemment par un repository, "
-          + "elles sont maintenant dans l'état DETACHED");
-      Restaurant quick = new Restaurant("Quick");
-      quick.setCommunes(Set.of(com0, com2, com4));
-      try {
-        restaurantRepository.save(quick);
-      } catch (Exception e) {
-        log.error(e.getMessage());
-      }
-      displayDB();
+//      log.info("tentative 1");
+//      log.info(" => le restaurant n'est pas créé, "
+//          + "les variables com0 et com2 ayant déjà était utilisées précédemment par un repository, "
+//          + "elles sont maintenant dans l'état DETACHED");
+//      Restaurant quick = new Restaurant("Quick");
+//      quick.setCommunes(Set.of(com0, com2, com4));
+//      try {
+//        restaurantRepository.save(quick);
+//      } catch (Exception e) {
+//        log.error(e.getMessage());
+//      }
+//      displayDB();
 
       log.info("tentative 2");
       log.info(" => le restaurant est effectivement créé.");
@@ -111,8 +111,6 @@ public class AccessingDataJpaApplication {
       displayDB();
 
       log.info("####### Supprimer la commune de Saint Denis");
-      log.info(
-          "  TODO : Le restaurant Quick n'a plus de commune : le supprimer.");
       communeService.deleteCommune("Saint Denis");
       displayDB();
 
