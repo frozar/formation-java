@@ -1,0 +1,1370 @@
+
+Paumard
+
+Cours de 
+https://www.youtube.com/watch?v=gsBWy6YyhjI&list=PLzzeuFUy_CnhVfJIKyc3okTiiCc0anutx&index=19&ab_channel=cours-en-ligne
+
+
+JPA : Java Persistence API
+Hibernate
+
+JPA : la spécification : interface + annotation
+
+Hibernate est une implémentation de JPA. Autre implémentation: Eclipselink, ou OpenJPA.
+
+
+Le service rendu par JPA ?
+JPA fait le lien entre les objets Java et les enregistrements en DB.
+Une classe Java correspond à une Table.
+Un objet Java correspond à un enregistrement dans une Table.
+On parle d'ORM : Object Relationnal Mapping.
+
+Hibernate fourni les requêtes : d'insertion, de mise à jour, d'effacement, et de selection.
+Tout ça se fait grâce à des annotations.
+
+@Entity : Pour qu'une classe soit associée à une table via JPA, il faut que :
+ # la classe soit un bean
+3 conditions pour être un Bean:
+ - implement Serializable (pas absolument nécessaire)
+ - un constructeur vide dans la classe (il existe par défaut s'il n'y a pas d'autres constructeurs déclarés dans la classe)
+ - chaque champ de la classe doit avoir un getter/setter
+
+ # la classe doit posséder un champ qui correspond à la clé primaire de classe en base de donnée
+Par exemple "private int id;" ou "private long id;"
+
+ # dire à JPA que la classe correspond à une table en DB et quel est le champ qui correspond à la clé primaire
+La correspondance classe <-> Table avec l'annotation JPA "@Entity"
+La déclaration du champ qui correspond à la clé primaire avec @Id : "@Id private int id;"
+
+
+La configuration de la persistance d'une application JPA
+Dans le fichier META-INF/persistence.xml
+Skelette :
+<persistence ...>
+  <persistence-unit 
+     name="test-jpa"
+     transaction-type="JTA" OU  transaction-type="RESOURCE-LOCAL">
+  <provider>
+    org.hibernate.jpa.HibernatePersistenceProvider
+  </provider>
+  <class>
+    org.pomard.model.User
+  </class>
+  <properties>
+
+  </properties>
+
+
+</persistence>
+
+
+JTA : les transactions vont être gérées automatiquement
+RESOURCE-LOCAL : les transactions sont gérées à la main
+
+Pas possible d'avoir un mixte en gestion automatique et manuelle des transactions
+
+Le champ <provider> renseigne l'implémentation de PersistenceProvider à utiliser.
+
+Le champ <class> déclare les classes qui sont à gérer par l'unité de persistence.
+
+Le champ <properties> renseigne 2 types de propriétés :
+1. Standard JPA, certains optionnels et d'autres obligatoires
+2. Propre à l'implémentation choisie
+
+Les propriétés standards commencent toutes par "javax.persistence".
+La connexion à une base de donnée se fait par l'interface JDBC
+Les suffixes des propriété pour la DB :
+ .jdbc.url : l'URL de la DB (ex.: jdbc:mysql://localhost:3306/mysql)
+ .jdbc.driver : le type de DB à utiliser (ex.: com.mysql.driver.mysqldriver)
+ .jdbc.user : l'utilisateur administrateur de la DB (ex.: mysql)
+ .jdbc.password : le mot de passe de l'utilisateur administrateur de la DB (ex.: toto)
+Les propriétés propres à Hibernate :
+ .hibernate.hbm2ddl : fixer le comportement d'hibernate vis à vis de l'existence (ou non) des tables associées aux entité JPA. Les différentes valeurs : 
+   - validate : si une table n'existe pas, l'application émet une erreur et elle ne se lance pas
+   - update : il met la table à jour
+   - create : création de la table
+   - create-drop : création de la table et suppression du contenu de la table à la fermeture de l'application
+ .hibernate.dialect : optimisation des requêtes SQL en fonction de la DB utilisée. Voir la doc pour les différentes valeurs.
+
+## La création d'entité Java dans la DB
+### Utilisation des interface JPA pour créer un entity manager
+Utilisation de la méthode Persistence.createEntityManagerFactory("...");
+L'argument de createEntityManagerFactory précise le nom de l'unité de persistence à utiliser. L'unité de persistance qui est déclarée dans le fichier META-INF/persistence.xml
+Par exemple :
+EntityManagerFactory emf =
+Persistence.createEntityManagerFactory("test-jpa");
+
+L'objet "emf" va permettre de créer un EntityManager :
+EntityManager em = emf.createEntityManager();
+
+Dans notre cas, l'implémentation de EntityManager est fournie par "org.hibernate.jpa.HibernatePersistenceProvider", Hibernate.
+
+### Création des entity grâce à l'entity manager
+
+Exemple de context 
+User user = 
+EntityManager em =
+
+La modification de DB se fait dans des transactions
+1) Create
+em.getTransaction().begin();
+em.persist(user);
+em.getTransaction().commit();
+
+2) Retrieve
+User user =
+  em.find(User.class, 12);  // 12 étant la clé primaire d'un User en DB
+
+3) Update
+em.getTransation().begin();
+User user = 
+  em.find(User.class, 12);
+user.setAge(14);
+em.getTransaction().commit();
+
+4) Delete
+em.getTransation().begin();
+User user = 
+  em.find(User.class, 12);
+em.remove(user);
+em.getTransaction().commit();
+
+### Gestion de la clé primaire
+
+La gestion des clés primaires peut être confié à la DB ou à Hibernate.
+Ex.
+@Entity
+public class User
+
+  @GeneratedValue(strategy=GenerationType. <>)
+  @Id
+  private int id;
+
+Les différentes valeurs de GenerationType peuvent être :
+ - .AUTO : stratégie décidé par la DB utilisée
+ - .IDENTITY
+ - .TABLE
+ - .SEQUENCE : identifiant successif
+
+### Comment est-ce qu'Hibernate inspecte les classe Java pour connaitre les différents champs ?
+
+Il utilise l'API Reflection.
+2 façon de lire les champs avec l'API Reflection : 
+ - Field : va interroger directement un champ. S'il y a des contrôles de sécurité sur l'accès à des champs privés, il est possible que l'interrogation par Field ne fonctionne pas.
+ - Method : utile des getter/setter.
+
+Au dessus de l'annotation @Entity, on peut rajouter l'annotation @Access. L'annotation @Access prend en paramètre une constante de type AccessType. 2 valeurs pour cette constante :
+ - FIELD
+ - PROPERTY
+
+## Particulariser un Mapping
+
+Le nom des champs en Java est généralement écrit en camel-case, alors qu'en DB on utilise généralement l'underscore "_" pour séparer les noms dans un nom de variable => utiliser l'attribu "name" avec l'annotation @Column.
+
+Imposer des contraintes avec l'attribu "uniqueConstraints" dans l'annotation @Table. Contrainte d'intégrité donné avec l'annotation "@UniqueContraint".
+
+Ex.
+@Table(name="Personne", uniqueConstraints={
+  @UniqueContraint(name="nom_prenom_unique",
+    columnNames={"first_name", "last_name"})
+})
+
+@Entity
+public class User {
+
+  @Column(name="first_name", length=40) 
+  private String firstName;
+
+  @Column(name="last_name", length=60) 
+  private String lastName;
+
+}
+
+Règle par défaut de JPA pour les colonnes :
+ - les noms de colonnes correspond au nom des champs d'une classe : ajustable avec l'argument "name" de l'annotation @Column
+ - les colonnes de type string sont par défaut du type varchar(255) dans une DB : ajustable avec l'argument "length" de l'annotation @Column
+
+Règle par défaut de JPA pour une table :
+ - le nom d'une table correspond au nom de classe mappé : ajustable avec l'argument "name" de l'annotation @Table
+
+Possibilité d'ajouter des contraintes d'unicités dans une table avec l'attribu "uniqueConstraints" de l'annotation "@Table".
+
+## Type particulier 1 : les dates avec JPA
+
+Ex.
+@Entity 
+public class User {
+
+  @Temporal(TemporalType.DATE)
+  Date dateOfBirth;
+
+}
+
+2 types de Date dans le JDK
+java.util.Date : utilisable en JPA
+java.sql.Date : créer dans JDBC, inutilisable en JPA
+
+En Java, plusieurs types pour la gestion du temps
+DATE : mois - année - jour
+TIME : heure - minute - second
+TIMESTAMP : combinaison de DATE et TIME
+
+Obligatoire : il faut dire à JPA le type de "Date" qui est utilisé par un champ d'une classe avec l'annotation "@Temporal". "@Temporal" prend en argument une constante TemporalType.
+Les différentes valeurs de TemporalType peuvent être :
+ - .DATE 
+ - .TIME
+ - .TIMESTAMP
+
+## Type particulier 2 : les énumérations avec JPA
+
+Ex.
+enum Civility {
+  MRS, MR
+}
+
+@Entity
+public class User {
+
+  @Column(length=3)
+  @Enumerated(EnumType.STRING)
+  Civility civility;
+
+}
+
+L'annotation "@Enumerated" indique comment un champ énuméré doit être écrit en DB. "@Enumerated" prend en argument une constante EnumType.
+Les différentes valeurs de EnumType peuvent être :
+ - .STRING : stockage du nome de la valeur énuméré (Ex : "MRS" ou "MR")
+ - .ORDINAL : stockage du numéro d'index de la valeur énumérée dans la déclaration "enum"
+
+## Type particulier 3 : les champs serialisable et les autres avec JPA
+
+Les types non sérialisable ne peuvent pas être mappé en DB.
+Un tableaux d'int : sérialisable
+
+Ex.
+@Entity
+public class User {
+
+  @lob
+  int[] securityKey;
+
+}
+
+Pour mapper des champs sérialisable, utiliser l'annotation "@lob" (pour Large Object Binary) : utilisation en DB d'un champ de type BLOB ou GLOB
+
+### Gestion des intéractions lentes/longues
+
+## Opérations detach, merge et refresh, hypothèse optimiste
+
+User user = ...
+EntityManager em = ...
+
+Les opérations de persistance :
+em.persist(user) : écriture d'un user, une entité JPA, en DB
+em.remove(user) : suppression d'un user en DB
+
+L'EntityManager est responsable de la création des sessions de transaction. Dans lé scénario où l'utilisateur est en train de modifier une entité, la durée de la session de transaction peut être longue, ce qui mobilise l'EntityManager dans le vide.
+em.detach(user) : sert à détacher un bean de l'EntityManager : pas de mobilisation d'une session de transaction
+
+em.merge(user) : attache un entité JPA à un EntityManager. Utilise dans le cas où un bean a été détaché d'un EntityManager précédement, ou s'il provient d'un autre EntityManager.
+
+Le merge fonctionne si on est dans des conditions OPTIMISTE : il ne doit pas y avoir des modifications qui ont eu lieu sur un même "user" entre le moment du "detach" et du "merge".
+
+Dans le cas où le "em.merge" échoue, une exception est levée. Il est alors possible de mettre à jour le bean qui est manipulé avec :
+em.refresh(user)
+
+
+## Cycle de vie d'une entité JPA
+
+Ex.
+User user = new User() // NEW
+
+em.persist(user) // MANAGED
+em.detach(user) // DETACHED
+em.merge(user) // MANAGED (again)
+em.refresh(user) // MANAGED (still)
+
+em.remove(user) // REMOVED
+
+Cycle de vie
+état 1 : NEW : instance d'une entité JPA, bean, qui n'a pas encore vu la DB
+état 2 : MANAGED : au moins un EntityManager a persisté le bean
+REMOVED : un EntityManager a supprimé le bean
+DETACHED : sur le bean, on connait des informations : class, clé primaire => localisable en DB. On connait aussi la version du bean (ex. version 15) : permet de vérifier l'hypothèse optimiste.
+
+### Clé primaire composite
+
+Un clé primaire composite est faite de plusieurs champs
+
+Ex.
+@IdClass(PrimaryKey.class)
+@Entity
+Class User {
+
+  // 1ère façon de faire
+  @Id
+  int pid;
+  @Id
+  int uid;
+
+  // 2ième façon de faire
+  @EmbeddedId
+  PrimaryKey pk;
+
+}
+
+@Embeddable
+class PrimaryKey {
+  int pid;
+  int uid;
+}
+
+### Mise en relation en Java et en DB
+
+## Relation unidirectionnelle ou bidirectionnelle
+
+Ex.
+public class Commune {
+  String name;
+  @OneToOne  // le côté "maître" de la relation
+  Maire maire;
+}
+
+public class Maire {
+  String name;
+  @OneToOne(mappedBy="maire")  // le côté "esclave" de la relation
+  Commune commune;
+}
+
+
+DB : les tables
+Commune // [maître]
+ID  Name  ID_Maire
+
+Maire
+ID  Name
+
+relation de type 1:1
+
+Le champ "ID_Maire" est un champ de jointure de clés étrangères dans la table Commune.
+
+L'annotation "@OneToOne" permet de créer la relation entre Commune et Maire.
+L'argument "mappedBy" passé à l'annotation "@OneToOne" permet de créer une relation bidirectionnelle entre Commune et Maire. Sans cet argument, un champ de clé étrangère "ID_Commune" aurait été créé dans la table "Maire" ce qui peut entrainer des états incohérents de la DB.
+
+## Les relations de cascade en Java
+
+Hypothèse : relation unidirectionnelle
+
+Ex.
+Commune c = ...
+Maire m = ...
+EntityManager em = ...
+
+c.setMaire(m)
+em.persist(c)  // Exception : le bean "Maire" dans commune n'est pas dans l'état MANAGED pour l'EntityManager
+em.persist(m)
+
+Correction :
+Ex.
+public class Commune {
+  String name;
+  @OneToOne(cascade = cascadeType.PERSIST)
+  Maire maire;
+}
+
+L'argument "cascade" de "@OneToOne" décrit le comportement pour un champ de type bean lors d'une écriture : em.persist. "@OneToOne" prend en argument une constante cascadeType.
+Les différentes valeurs de cascadeType peuvent être :
+ - .PERSIST : persist le champ bean annoté durant un em.persist(...).
+ - .
+
+## En lecture de DB : les modes EAGER et LAZY
+
+Hypothèse : relation unidirectionnelle
+
+Lors de la récupération d'un objet en DB, il y a deux modes : EAGER et LAZY. Intéressant uniquement dans le cas où l'objet a des relations avec d'autres entités.
+
+Ex.
+EntityManager em = ...
+Commune c = em.find(Commune.class, 12) // récupérer la commune avec la clé primaire 12 en DB
+Maire m = c.getMaire()
+
+Le comportement de "em.find" est piloté par les 2 modes :
+EAGER : le champ mairie de "c" a déjà été chargé lors de l'appel à "em.find"
+LAZY : le champ mairie de "c" est chargé lors de l'appel "c.getMairie"
+
+Suivant le workflow de l'application, l'une des 2 méthodes sera la plus avantageuse en moyenne.
+
+En mode LAZY, le bean doit être dans l'état MANAGED pour pouvoir récupérer le champ mairie. S'il a été détaché entre temps, il ne sera plus possible pour le bean "c" de récupérer sa mairie associée.
+
+
+## IO dans une relation bidirectionnelle
+
+Hypothèse : relation bidirectionnelle
+
+en "cascade.PERSIST"
+
+Ex. 1
+EntityManager em = ...
+Commune c = ...
+Maire m = ...
+
+c.setMaire(m)
+em.persist(c)  // la jointure en DB va bien être créée
+
+m.getCommune() -> NULL // en création, dans une relation bidirectionnelle en DB, c'est le code Java qui doit le gérer.
+
+// Il faire en Java l'association de "m" à "c" dans la création
+m.setCommune(c)
+
+Ex. 2
+Commune c = em.find(Commune.class, 7)
+c.getMaire() -> m
+m.getCommune() -> c
+
+Dans le cas de la récupération d'objet depuis la DB, les champs des différents objets sont correctement assigné via JPA.
+
+## OneToOne : récapitulatif
+
+1 : une colonne de jointure est créée dans la Table maître
+2 : cascade, en particulier le cascade persist qui permet d'écrire les objets successivement dans la DB
+3 : fetch en mode LAZY ou EAGER
+4 : relation bidirectionnel, argument mappedBy (côté esclave), gérée manuellement lors de la création en Java du caractère bidirectionnel dans les bean.
+
+## Relation multivalue : 1:p
+
+Ex.
+public class Commune {
+  @ManyToOne(...)    // le côté maître
+  Departement departement;
+}
+
+public class Departement {
+  @OneToMany(
+    mappedBy="departement"
+  )  // le côté esclave 
+  List<Commune> Communes
+}
+
+DB : les tables
+Commune [maître]
+ID  Nom  ID_Departement
+
+Departement
+ID  Nom
+
+L'annotation "@OneToMany" est réservée au côté esclave de la relation.
+
+## Liste persistante : Copie défensive
+
+Ex.
+public class Commune {
+  @ManyToOne
+  Departement departement;
+}
+
+public class Departement {
+  @OneToMany(mappedBy="departement")
+  List<Commune> communes;
+}
+
+List<Commune> communes = departement.getCommunes();
+
+communes.clear();
+
+Le champ "communes" est un champ persistant en DB, donc l'appel à ".clear()" va gérer des écritures en DB et ce n'est pas forcément souhaitable. De plus, une exception est levée si l'opération ".clear()" ne se fait pas dans le contexte d'une transaction.
+
+C'est l'exposition directe du champ "communes" à l'extérieur de l'objet Departement qui entraîne ces problèmes.
+
+Correction de la méthode ".getCommunes()" avec un retour de copie de la liste communes:
+List<Communes> getCommunes() {
+  return new ArrayList<>(this.communes);
+}
+
+C'est la notion de copie défensive.
+
+## Copie défensive : conséquence
+
+Le fait de ne plus avoir d'accès à un champ interne d'une classe oblige la classe à fournir des méthodes de modifications de ces objets en interne.
+
+Ex.
+void setDepartement(Departement d) {
+  this.departement = d;
+  d.getCommunes().add(this); // d.getCommunes() retourne un copie défensive et ce n'es pas
+                             // ce qui est souhaitable dans ce cas
+  d.addCommune(this);
+}
+
+La méthode "d.addCommune" sera responsable de la MàJ de la structure interne de l'objet département ce qui pourrait gérer des écritures en DB, ce qui est souhaitable dans ce cas.
+
+## Relation 1:p et p:1 : récapitulatif
+
+2 annotations
+@OneToMany(mappedBy)
+@ManyToOne
+  génére 2 ou 3 tables
+Cascade et fetch qui sont similaire au cas 1:1
+Bidirectionnel
+Copie Défensive des champs multivalue
+
+## Relation many to many : n:p
+
+Ex.
+public class Musicien {
+  @ManyToMany(cascade=..., fetch=...)
+  List<Instrument> inst;
+}
+
+public class Instrument {
+  @ManyToMany(mappedBy="inst")
+  List<Musicien> mus;
+}
+
+DB : les tables
+Musicien
+ID  Nom
+
+Instrument
+ID  Nom
+
+Musicien_Instrument
+ID_Musicien  ID_Instrument
+
+## Relation composition
+
+Relation de type 1:1 où le cycle de vie de 2 objets sont fortement liés. Si un des objets est supprimé, l'autre n'a plus lieu d'existé.
+
+Ex.
+@Entity
+public class User {
+  String name
+  @Embedded
+  Address address
+}
+
+@Embeddable
+public class Address {
+  String address
+  @OnetoMany
+  Commune commune
+}
+
+Dans cet exemple si l'objet User est supprimé, son adresse associée n'a pas lieu d'exister indépendemment. C'est la relation de composition.
+
+Le plus intéressant c'est de mappé les deux objets dans une seule table.
+
+DB : les tables
+User
+ID  Name  Address  ID_Commune
+
+Les annotations "@Embebbed" et "@Embeddable" serve à construire ce schéma en DB.
+
+Donc on connaît maintenant 2 types de classe JPA :
+@Entity
+@Embeddable
+
+On peut faire des requêtes uniquement vers des classes @Entity en JPA.
+
+### Les interactions avec l'API Collection
+
+Dans Collection on a principalement : List, Set, Map
+
+Problème:
+departement.addCommune(paris)
+           .addCommune(nantes)
+           .addCommune(paris)  // DB dit : ça c'est fait
+
+DB : les tables
+Commune
+ID  Nom     ID_Departement
+12  Paris   9
+13  Nantes  9
+
+La DB empêche d'avoir des doublons : c'est un Set
+Par défaut, les relations 1:p se traduit par un Set en DB
+
+departement.getCommunes() -> SELECT * from Commune WHERE ID_Departement = 9
+
+La récupération des communes ne dit rien sur l'ordre dans lequel on récupère les communes, similaire à un Set.
+
+## Utiliser une List au lieu d'un Set
+
+Correction de la table en DB
+DB : les tables
+Commune
+ID  Nom     ID_Departement  Idx
+12  Paris   9               0
+13  Nantes  9               1
+
+"Idx" est une colonne technique qui enregistre les indices au moment de l'ajout des entités en DB.
+
+Avec la colonne technique, on peut faire :
+departement.getCommunes() -> SELECT * from Commune 
+                               WHERE ID_Departement = 9
+                               OrderBy Idx
+
+Ca peut coûter cher.
+
+dept.add(0, lyon)
+
+DB : les tables
+Commune
+ID  Nom     ID_Departement  Idx
+12  Paris   9               0 -> 1
+13  Nantes  9               1 -> 2
+14  Lyon    9               0
+
+MaJ de tous les champs "Idx" dans la table : beaucoup d'UPDATE
+
+dept.remove(1)
+
+DB : les tables
+Commune
+ID  Nom     ID_Departement  Idx
+13  Nantes  9               2 -> 1
+14  Lyon    9               0
+
+Remove peut aussi générer beaucoup d'opération, donc à éviter.
+
+## Utiliser un SortedSet
+
+Pour garantir un certain ordre, il faut demander d'ordonner les Records en fonction d'un champ.
+
+DB : les tables
+Commune
+ID  Nom     ID_Departement
+12  Paris   9
+13  Nantes  9
+14  Lyon    9
+
+departement.getCommunes() -> SELECT * from Commune 
+                               WHERE ID_Departement = 9
+                               OrderBy Nom
+
+Compromis entre une List Java et une "liste" en DB : une sorte de SortedSet
+
+Attention : lors de la création, l'ordre de récupération de commune dépendent de l'ordre d'insertion alors que si on lit les communes depuis la DB, lors peut être différent.
+
+## Implémentation en JPA
+
+Ex.
+@Entity
+public class Departement {
+  @OrderBy("name")
+  @OneToMany
+  List<Commune> communes;
+}
+
+L'annotation "@OrderBy" permet de préciser le nom d'un champ de commune, "name", qui va être utiliser pour trier les Records lors d'une récupération : comportement d'un SortedSet
+
+Ex.
+@Entity
+public class Departement {
+  @OrderColumn("Idx")
+  @OneToMany
+  List<Commune> communes;
+}
+
+L'annotation "@OrderColumn" permet de préciser le nom d'une colonne "technique" à JPA pour maintenir un ordre lors de la récupération. JPA sera chargé de maintenir la cohérence de cette colonne : comportement de List, mais c'est coûteux.
+
+Ex.
+@Entity
+public class Departement {
+  @OneToMany
+  Set<Commune> communes;
+}
+
+Dans ce cas, c'est le comportement d'un Set, sans annotation supplémentaire.
+
+## Les tables de hashage
+
+Une Map c'est généralement une relation 1:p
+
+Ex.
+@Entity
+public class Departement {
+  @OneToMany
+  Map<Integer, Commune> map;
+}
+
+departement.put(75000, pairs)
+
+DB : les tables
+Commune
+ID  Nom    ID_Dept
+12  Paris  9
+
+Comment gérer le "75000" ?
+
+Soit c'est un entier sans sémantique : ajout d'une colonne "technique"
+
+@Entity
+public class Departement {
+  @MapKeyColumn(name="Key")  // permet de spécifier le nom de la colonne technique
+  @OneToMany
+  Map<Integer, Commune> map;
+}
+
+DB : les tables
+Commune
+ID  Nom    ID_Dept  Key
+12  Paris  9        75000
+
+Soit c'est un entier avec une valeur sémantique : par ex. le code postal
+
+@Entity
+public class Departement {
+  @MapKey(name="codePostal")  // permet de spécifier un nom de champ de "Commune"
+  @OneToMany
+  Map<Integer, Commune> map;
+}
+
+DB : les tables
+Commune
+ID  Nom    CodePostal ID_Dept
+12  Paris  75000      9      
+
+Le stockage d'une Map fonction si la clé est :
+ - une classe wrapper de type primitif
+ - une String
+ - une classe de type numérique (BigInteger, BigDecimal)
+
+## Table de hashage : la clé est une entité JPA
+
+Ex.
+@Entity
+public class Departement {
+  @MapKeyColumn(name="Key")  // permet de spécifier le nom de la colonne technique
+  @OneToMany
+  Map<CodePostal, Commune> map;
+}
+
+departement.put(75000, paris)
+
+DB : les tables
+Commune
+ID  Nom    ID_Dept  ID_CodeP
+12  Paris  9        7
+
+CodePostal
+ID  Nom
+7   75000
+
+Les get sur ce schéma vont faires des jointures : plus coûteux, plus complexe.
+
+## Mapping de collection qui ne sont pas des entités
+
+Ex.
+public class User {
+  @OrderColumn(name="index")  // indique un nom de colonne "technique" pour assurer l'ordre
+  @ElementCollection
+  List<String> friends;
+}
+
+L'annotation "@ElementCollection" permet d'ajouter des collections de champs primitif en DB.
+
+DB : les tables 
+User
+ID  Name
+12  James
+
+User_friends
+ID  index  User_ID  friends
+0   0      12       Sarah
+1   1      12       Bob
+2   2      12       Rebecca
+
+## JPA - Collection : récapitulatif
+
+Relation 1:p
+Set : utilisation par défaut et recommandée
+List : 
+1. ordonnées par un champ de l'entité 
+2. ordonné par un index (mais ça peut être coûteux)
+Map : 
+1. la clé sont de type simple : 
+    - les valeurs sont aléatoire
+    - égales à un champ de l'entité
+2. la clé est une entité : coût de la jointure à prendre en compte
+
+### JPA : héritage
+
+Ex.
+@Entity
+public class User {
+  @Id
+  int id;
+  String name;
+}
+
+@Entity  // pas besoin de clé primaire dans Employee
+public class Employee extends User {
+  int salary;
+}
+
+Comment ça se traduit en DB ?
+
+User user = new User()
+Employer emp = new Employee(...)
+
+DB : les tables
+stratégie 1 (les entités sont complétement disjointes) :
+Employee
+ID  Name  Salary
+
+User
+ID  Name
+
+stratégie 2 (le champ "Salary" peut être NULL) :
+User
+ID  Name  Salary
+
+stratégie 3 (génération de jointure) :
+User
+ID  Name 
+
+Employee
+ID  Salary
+
+## Stratégie TABLE_PER_CLASS
+
+1 entité JPA = 1 table en DB
+
+DB : les tables
+User
+ID  Name
+
+Employee
+ID  Name  Salary
+
+1) Create : em.persist(...)           // User ou Employee; pas de souci
+2) Retrieve : em.find(User.class, 12) // pas de souci
+3) Update : user.setName(...)         // pas de souci
+4) Remove : em.remove(user)           // pas de souci
+5) Requête polymorphique     : peut être coûteux
+
+Les requêtes polymorphiques sont propres à JPA:
+Ex.
+Select user User user
+UNION
+
+Les requêtes polymorphique récupérent toutes les intances de User ainsi que les sous-classes de Users.
+
+Cons : il y aura autant de requêtes Select qu'il y a de table représentant User ou une classe dérivée de User. Ex. récupérer tous les User de 30 ans.
+
+## Stratégie SINGLE_TABLE
+
+2 entités = 1 table unique
+
+DB : les tables
+User
+ID  Name   Salary  DTYPE
+12  Sarah          User
+
+Avec cette stratégie, impossible d'utiliser l'annotation "@Column(nullable=false)" au dessus de "salary".
+
+1) Create : em.persist(...)           // User ou Employee; pas de souci
+2) Retrieve : em.find(User.class, 12) // est-ce User ou Employee ? la colone DTYPE fait le discriminant : colonne "technique"
+3) Update : emp.setSalary(10000)      // pas de souci
+4) Remove : em.remove(emp)            // pas de souci
+5) Requête polymorphique : un seul SELECT permet de récupérer tous les Users de 30 ans : pas de souci
+
+Cons : peut pas utiliser toutes les annotations de contraintes de SQL. implique l'utilisation d'une colonne "technique".
+Cons : Limite de la DB : en nombre de colonnes et en taille mémoire de chaque Record.
+Pro : pas de problème avec les requêtes polymorphiques.
+
+## Stratégie JOINED
+
+1 entité = 1 table
+1 entité qui étend une autre entité est en relation 1:1 avec cett entité.
+
+DB : les tables
+User
+ID  Name  DTYPE
+
+Employee
+ID  Salary
+
+1) Create : em.persist(emp)           // Employee : 2 insertions
+2) Retrieve : em.find(Employee.class, 7) // une jointure à faire
+3) Update : emp.setSalary(10000)      // pas de souci
+4) Remove : em.remove(emp)            // pas de souci
+5) Requête polymorphique : un seul SELECT permet de récupérer tous les Users de 30 ans : pas de souci
+
+Con : la création demande 2 insertions
+Con : le retrieve demande de faire une jointure
+Pro : pas de problème pour rajouter une contrainte sur le champ "salary" d'Employee
+Pro : requête polymorphique : les requêtes se font sur la table de base, ici "User". La colonne "DTYPE" sert de discriminant.
+
+Les compromis :
+Si les requêtes polymorphiques et les contraintes d'intégrité sont les priorités => JOINED
+Si les requêtes polymorphiques sont les priorités => SINGLE_TABLE
+Autrement => TABLE_PER_CLASS
+
+## Implémentation d'une stratégie en JPA
+
+Ex.
+@Inheritance(stratgey = InheritanceType.JOINED)
+@Entity
+@DiscriminatorColumn("DTYPE")
+@DiscriminatorValue("USER")
+public class User {
+  @Id
+  int id;
+  String name;
+}
+
+@Entity
+@DiscriminatorValue("EMP")
+public class Employee extends User {
+  int salary;
+}
+
+L'annotation "@Inheritance" indique la stratégie à appliquer pour la création du schéma de la DB. "@Inheritance" prend en argument une constante InheritanceType.
+Les différentes valeurs de InheritanceType peuvent être :
+ - .JOINED
+ - .SINGLE_TABLE
+ - .TABLE_PER_CLASS
+
+L'annotation "@DiscriminatorColumn" indique le nom de la colonne "technique" qui va renseigner le type de l'entité. "@DiscriminatorColumn" prend un argument "name" qui donne le nom de la colonne.
+"@DiscriminatorValue" prend un argument la valeur qui va permettre de discriminer User d'Employee.
+
+## Mapper une classe dans une autre
+
+Ex.
+@MappedSuperClass
+public class AbstractPersistent {
+  @Id
+  int id;
+
+  @Temporal(...)
+  Date creationDate;
+}
+
+@Entity
+public class User extends AbstractPersistent {...}
+
+@Entity
+public class Product extends AbstractPersistent {...}
+
+@Entity
+public class Contract extends AbstractPersistent {...}
+
+La classe AbstractPersistent factorise des champs présents dans diverses classes.
+
+Si on a besoin d'avoir des "List<AbstractPersistent>" disponible dans des classes, alors il est possible qu'on veuille que "AbstractPersistent" soit une Entity.
+
+Mais si AbstractPersistent n'est qu'un détail d'implémentation, alors on préférera utiliser l'annotation "@MappedSuperClass" pour que JPA connaisse cette classe. Les sous classes de AbstractPersistent auront bien les champs de AbstractPersistent dans leur table respective.
+
+3 types d'annotation de classe avec JPA :
+@Entity : sur une classe abstraire ou concrète : OK
+@Embeddable
+@MappedSuperClass : sur une classe abstraire ou concrète : OK
+
+## héritage : récapitulatif
+
+3 stratégies :
+  JOINED
+  TABLE_PER_CLASS
+  SINGLE_TABLE
+les stratégies sont choisis pour toutes une hiérarchie de class donnéee : pas de changement de stratégie en cours de route.
+les annotations : @Entity @MappedSuperClass @Embeddable
+
+### Faire des requêtes sur la DB
+
+JPA permet de faire des requêtes sur la DB : fouiller dans les données.
+API Query permet de faire des requêtes en DB.
+2 types de requêtes :
+  SQL : Simple Query Language : langage propre à la DB utilisée
+  JPQL : JPA Query Language : indépendant de la DB utilisée, propre aux entités JPA
+
+Les requêtes peuvent être écrite :
+ - en chaîne de caractères
+ - en requête nommée
+
+## Requêtes Natives
+
+Ex. 1
+String sql = "SELECT count(*) count from Maire"; // définition de la requête
+Query query = em.createNativeQuery(sql); // construction d'un objet Query
+Object result = query.getSingleResult(); // retourne 1 seul élément (1 ligne) de n'importe quel type.
+
+Ex. 2
+String sql = "SELECT name,age
+              FROM Maire WHERE id = 12";
+Query query = em.createNativeQuery(sql);
+Object[] result = query.getSingleResult(); // retourne 1 seule ligne.
+
+Dans ce cas, "getSingleResult()" retourne un tableau d'"Object", qui contiendra une chaîne de caractère pour le "name" et un entier pour l'"age".
+
+Ex. 3
+String sql = "SELECT name,age
+              FROM Maire";
+Query query = em.createNativeQuery(sql);
+List result = query.getResultList(); // retourne 1 liste générique
+Cast potentiel : List<Object[]>
+
+## Requêtes Natives Paramètres
+
+String sql = "SELECT codePostal
+              FROM Commune
+              WHERE nom = ?1"; // le "?1" désigne un paramètre pour la requête
+
+Query query = em.createNativeQuery(sql);
+query.setParameter(1, "Paris"); // le "1" désigne le numéro d'index du paramètre à remplacer
+
+## Requêtes Natives - récupération d'entité directement
+
+Ex.
+String sql = "SELECT *
+              FROM Commune
+              WHERE codePostal = ?1";
+
+Query query = em.createNativeQuery(sql, Commune.class);
+
+La "Commune.class" doit être une entité JPA
+
+Object commune = query.setSingleResult();
+
+Possibilité de caster "commune" en une classe "Commune" sans problème.
+
+## Requêtes Natives Nommée
+
+Ex. 1
+@NamedNativeQueries({
+  @NamedNativeQuery(
+    name="Commune.byName",
+    query="SELECT * FROM Commune WHERE name = ?1"
+  )
+})
+
+@Entity
+public class Commune {
+  @Id
+  int id;
+}
+
+
+"@NamedNativeQueries" : déclaration des requêtes natives nommées
+"@NamedNativeQuery" : déclaration d'une requête native nommée
+
+// Création d'une requête nommée
+Query q = em.createNamedQuery("Commune.byName");
+q.setParamater(1, "Paris");
+Object o = q.getSingleResult();
+
+Pour fixer le type de résultat d'une query.
+
+Ex. 2
+@NamedNativeQueries({
+  @NamedNativeQuery(
+    name="Commune.byName",
+    query="SELECT * FROM Commune WHERE name = ?1",
+    resultClass=Commune.class
+  )
+})
+
+@Entity
+public class Commune {
+  @Id
+  int id;
+}
+
+TypedQuery<Commune> tq = em.createNamedQuery("Commune.byName", Commune.class);
+q.setParamater(1, "Paris");
+Commune o = q.getSingleResult();
+List<Commune> o = q.getResultList();
+
+## Requête Native - Mapping dans un objet non JPA
+
+Ex.
+@NamedNativeQueries({
+  @NamedNativeQuery(
+    name="Communes.stats ",
+    query="SELECT count(*) count, avg(population) avg 
+           FROM Commune",
+    resultSetMapping="stats"  // renseigne le nom du ResultSetMapping à utiliser
+  )
+})
+
+// Commune.java:
+@ResultSetMappings({
+  @ResultSetMapping(
+    name="stats",  // le nom du résulte mapping
+    classes=@ConstructorResult( // utilisation direct du constructeur d'une classe
+      targetClass=Statistic.class,
+      columns={
+        @ColumnResult(name="count", type=Long.class),
+        @ColumnResult(name="avg", type=Double.class)
+      }
+    )
+  )
+})
+
+@Entity
+public class Commune {
+  @Id
+  int id;
+}
+
+
+// Statistics.java:
+public class Statistics {
+  public Statistics(long count, double avg) {...}
+}
+
+Query q = em.createQuery("c.stats");
+Statistics r = q.getSingleResult();
+
+"@ResultSetMappings" : déclaration des différentes recettes.
+"@ResultSetMapping" : décrit comment le mapping du resultat d'une requête doit se faire pour instancier une class quelconque.
+
+
+## Requête Native - Plusieurs mapping
+
+Il est possible d'utiliser le ResultSetMapping pour instancier plusieurs class quelconque, des entités JPA et d'utiliser des colonnes pour instancier des objets.
+
+Ex.
+// Commune.java:
+@ResultSetMappings({
+  @ResultSetMapping(
+    name="stats",  // le nom du résulte mapping
+    classes=@ConstructorResult( // utilisation direct du constructeur d'une classe
+      targetClass=Statistic.class,
+      columns={
+        @ColumnResult(name="count", type=Long.class),
+        @ColumnResult(name="avg", type=Double.class)
+      }
+    )
+    entites=@EntityResult(...)  // instanciation d'entité JPA
+    columns=@ColumnResult(...)  // utilisé le résultat d'une colonne pour créer un objet
+  )
+})
+
+### Requêtes JPQL
+
+JPQL est un langage de requête qui porte sur le modèle objet de l'application, pas sur une DB particulière.
+
+Ex.
+String jpql = "Select commune
+               From Commune commune
+               Where commune.nom = 'Paris'";
+
+Ici "commune" est une variable : le nom est arbitraire.
+Après le "From" on trouve une entité JPA.
+
+@Entity(name="Commune")
+public class Commune {
+  String nom;
+  ...
+}
+
+Si on ne précise pas le nom de l'entité avec l'argument "name", c'est le nom de la classe full-qualified qui doit être utilisé dans le langage JPQL.
+
+Query q = em.createQuery(jpql)
+
+Pro : JPQL génére la requête SQL pour l'utilisateur, implémentation portable
+Pro : pas besoin de caster le résultat d'une query
+
+## JPQL - requêtes paramétrées
+
+Ex. 1
+// paramètre indicé
+String jpql = "Select commune
+               From Commune commune
+               Where commune.nom = ?1";
+query.setParameter(1, "Paris");
+
+Ex. 2
+// paramètre nommé
+String jpql = "Select commune
+               From Commune commune
+               Where commune.nom = :nom";
+query.setParameter("nom", "Paris");
+
+## JPQL - requêtes simples
+
+Ex. 1 : sélection
+Select commune From Commune commune
+Where commune.population > 100000
+
+Ex. 2 : aggrégation
+Select sum(commune.population) From Commune commune
+Where commune.population < 1000
+
+Ex. 3 : imbrication
+Select commune From Commune commune
+Where commune.population = (Select max(c.population) From Commune c)
+
+## JPQL - jointure
+
+Departement
+  List<Commune> communes
+
+Commune
+  population
+
+Departement est en relation 1:p avec Commune
+
+Ex.
+Select departement.nom,sum(commune.population)
+From Departement departement, in(departement.communes) commune
+Where Departement.nom = :name
+
+## JPQL - jointure
+
+Departement
+  List<Commune> communes
+
+Commune
+  population
+  departement
+
+Ex.
+Select c.nom, c.departement.nom  // jointure implicite
+From Commune c
+
+En SQL
+Select c.nom, d.nom
+From Commune c
+JOIN Departement d   // jointure explicite 
+ON c.id_departement = d.id
+
+Cette requête retourne uniquement les communes qui ont un département associé, ce qui est normal si la DB est dans un état cohérent.
+
+Si on veut retourner aussi les commune qui n'ont pas de de département associé, il faut que la jointure réserve le côté gauche de la jointure dans cet exemple.
+
+En SQL
+Select c.nom, d.nom
+From Commune c
+LEFT JOIN Departement d   // jointure explicite 
+ON c.id_departement = d.id
+
+En JPQL, les jointure implicite sont des INNER JOIN : les communes sans département ne sont pas retournée.
+
+Select c.nom, c.departement.nom
+From Commune c
+INNER
+
+Pour faire une jointure externe, qui réserve les communes sans département associée :
+Select c.nom, d.nom
+From Commune c LEFT JOIN   // jointure explicite
+     c.departement d
+
+## JPQL - FETCH
+
+Departement
+  List<Commune> communes
+
+Commune
+  population
+  departement
+
+Ex.
+Select c 
+From Commune c
+
+Query q = em. ....
+List<Commune> l = q.getResultList()
+
+// Boucler sur la liste des communes
+l : commune.getDepartement()
+
+Dans ce cas, la récupération des départements se fait au compte goute : peut être coûteux.
+
+Correction
+
+Ex.
+Select c 
+From Commune c
+  JOIN FETCH c.departement d
+
+Le mot clé "FETCH" demande à JPA de charger l'entité departement qui est en relation avec commune lors de la requête : amélioration des performances.
+
+## JPQL - mapping en classe non JPA
+
+Requête typé en JPQL
+
+Ex.
+String jpql = 
+"Select 
+  new org.paumard.model.util.Statistics(
+    count(c), sum(c.population)
+  )
+From Commune c"
+
+public class Statistics {
+  public Statistics(long count, long sum) {...}
+}
+
+
+TypedQuery<Statistics> query =
+  em.createQuery(jpql, Statistics.class);
+
+Statistics s = query.getSingleResult();
+
+## JPQL - requête nommée
+
+Ex.
+@NamedQueries({
+  @NameQuery(
+    name="Commune.ByName",
+    query="Select c From Commune c Where c.nom = :name"
+  )
+})
+
+@Entity
+public class Commune {...}
+
+TypedQuery<Commune> query = em.createNamedQuery("Commune.ByName", Commune.class);
+
+## JPQL - pagination
+
+Ex.
+query.setFirstResult(index);
+
+"setFirstResult" : configure à partir de quel indice la méthode "getResultList" va retourner les records.
+
+query.setMaxResult(occurences);
+"setMaxResult" : limite le nombre de record retourné par "getResultList".
+
+## JPQL - UPDATE et DELETE
+
+SELECT : dispo en SQL/JPQL
+UPDATE et DELETE : dispo en SQL
+
+En JPA, on fait du code Java dans une session transactionnelle pour modifier la DB
+em.remove(...)
+maire.setAge(...)
+
+Comment regrouper les opérations d'UPDATE ou DELETE en JPQL pour faire une seule requête ?
+
+UPDATE et DELETE : dispo en JPQL
+
+Restriction : les requêtes DELETE ou UPDATE en JPQL doivent être la dernière opérations de persistance dans une session de transaction.
+
+## JPA - Hibernate : récapitulatif
+
+Créer des entités JPA
+ - mapper les champs
+ - mapper les relations (1:1, 1:p, n:p), héritage
+ - cascade, fetch
+
+Gestion des entités JPA
+ - au travers de l'entity manager <-> transaction
+ - Opérations de persistence
+
+Requêtes
+ - SQL, JPQL
+
+Configuration (persistence.xml)
+
+
+
+
+
+
+
+
+
+
+
