@@ -3,6 +3,8 @@
 Ce projet présente les différentes interactions possible entre un controlleur
 Spring Boot et des vues en JSP.
 
+[Slide de présentation](https://slides.com/frozar/spring-boot-jsp)
+
 ## JSP
 
 Les différents types de balises JSP sont les suivants :
