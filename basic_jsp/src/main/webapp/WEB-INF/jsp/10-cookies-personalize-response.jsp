@@ -1,7 +1,7 @@
-<html>
-
+<html lang="en">
 <head>
 <title>Confirmation</title>
+<jsp:include page="header.jsp" />
 </head>
 
 <%
@@ -19,13 +19,20 @@ response.addCookie(theCookie);
 %>
 
 <body>
+  <jsp:include page="nav-bar.jsp"/>
 
-	Thanks! We set your favorite language to: ${param.favoriteLanguage}
+  <div class="container">
 
-	<br />
-	<br />
+    Thanks! We set your favorite language to: ${param.favoriteLanguage}
 
-	<a href="cookies-homepage">Return to homepage.</a>
+    <br />
+    <br />
+
+    <a href="cookies-homepage">Return to homepage.</a>
+
+  </div>
+
+  <jsp:include page="footer.jsp" />
 
 </body>
 

@@ -1,13 +1,20 @@
-<html>
-
-<head><title>Student Confirmation Form</title></head>
-
+<html lang="en">
+<head>
+<title>Student Confirmation Form</title>
+<jsp:include page="header.jsp" />
+</head>
 <body>
+  <jsp:include page="nav-bar.jsp" />
 
-The student is confirmed: ${param.prenom} ${param.nom}
-<br />
-The student favorite language: ${param.favoriteLanguage}
+  <div class="container">
 
+    The student is confirmed: ${param.prenom} ${param.nom}
+    <br />
+    The student favorite language: ${param.favoriteLanguage}
+
+  </div>
+
+  <jsp:include page="footer.jsp" />
 </body>
 
 </html>

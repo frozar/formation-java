@@ -47,7 +47,7 @@ L'annotation Java utilisée :
 
 | Annotation             | Description   |
 | ---------------------- | ------------- |
-| @Value | Se met au dessus d'un champ d'une classe. Permet d'injection des valeurs de application.properties dans un champ d'une classe. |
+| @Value | Se met au dessus d'un champ d'une classe. Permet d'injecter des valeurs de application.properties dans un champ d'une classe. |
 
 # Documentation links
 

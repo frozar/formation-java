@@ -1,16 +1,16 @@
 
-<html>
-
+<html lang="en">
+<head>
+<jsp:include page="header.jsp" />
+</head>
 <body>
+  <jsp:include page="nav-bar.jsp">
+    <jsp:param name="pathname" value="/include" />
+  </jsp:include>
 
-<jsp:include page="my-header.jsp" />
+  <div class="container">1, 2, test, 1, 2, test...</div>
 
-1, 2, test, 1, 2, test... 
-<br/>
-<br/>
-
-<jsp:include page="my-footer.jsp" />
-
+  <jsp:include page="footer.jsp" />
 </body>
 
 </html>
