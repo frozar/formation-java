@@ -1,8 +1,8 @@
 package com.example;
 
 public class Rectangle {
-  final protected Double height;
-  final protected Double width;
+  final private Double height;
+  final private Double width;
 
   public Rectangle(Double height, Double width) {
     this.height = height;

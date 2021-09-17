@@ -7,6 +7,6 @@ public class Carre extends Rectangle {
 
   @Override
   public String toString() {
-    return "Carre [height=" + height + ", width=" + width + "]";
+    return "Carre " + super.toString();
   }
 }
