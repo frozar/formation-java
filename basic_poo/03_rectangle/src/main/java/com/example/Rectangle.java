@@ -19,6 +19,7 @@ public class Rectangle {
 
   @Override
   public String toString() {
-    return "Rectangle [height=" + height + ", width=" + width + "]";
+    return this.getClass().getSimpleName() + " [height=" + height + ", width="
+        + width + "]";
   }
 }
