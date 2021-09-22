@@ -1,0 +1,46 @@
+#!/bin/bash
+
+usage()
+{
+    echo "Usage: $(basename ${0}) <commit-ish-hash>"
+    exit 1
+}
+
+print_tree()
+{
+    local tree_hash=$1
+    local nb_indent=$2
+    git cat-file -p $tree_hash | while read line
+    do
+        type=$(echo $line | awk '{ print $2 }')
+        hash=$(echo $line | awk '{ print $3 }')
+        name=$(echo $line | awk '{ print $4 }')
+        # Print indentation
+        for i in $(seq $nb_indent); do echo -n " " ; done
+        # Print hash details
+        echo ${type:0:1} ${hash:0:6} ${name}
+
+        # if the hash if a tree, recursive call
+        if test $type == "tree"
+        then
+            print_tree $hash $(($nb_indent + 2))
+        fi
+    done
+}
+
+if test $# != "1"
+then
+    usage
+fi
+
+commit=${1}
+
+if test $(git cat-file -t ${commit}) != "commit"
+then
+    echo "${commit} is a \"$(git cat-file -t ${commit})\" not a \"commit\"."
+    usage
+fi
+
+tree_root_hash=$(git cat-file -p ${commit} | head -n1 | cut -d" " -f2)
+
+print_tree $tree_root_hash 0
