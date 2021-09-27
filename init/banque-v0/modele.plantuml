@@ -1,0 +1,77 @@
+@startuml
+abstract class CompteBancaire {
+    #String codeBanque
+    #String codeGuichet
+    #String numCompte
+    #String cle
+    #Double solde
+    -Double calculerSolde()
+    +void afficherSyntheseOperations()
+    +void creerOperation(String libelle, Double montant) throws CompteException
+    +String getRib()
+}
+
+class Personne {
+    #String nom
+    #String prenom
+}
+
+class Operation {
+    #Integer numOperation
+    #Date dateOperation
+    #String libelle
+    #Double montant
+}
+
+class CompteCourant {
+}
+
+class CompteEpargne {
+    #Double txInteret
+    +Double calculerInterets()
+    +void creerOperation(String libelle, Double montant) throws CompteException
+}
+
+
+class CarteBancaire {
+    -String codePin
+    #String numCarte
+    #Date dateExpiration
+    +boolean verifierPin(String pin)
+}
+
+class Gabier {
+    +void accessCompte(String numCarte, String codePin) throws SystemeBancaireException
+    +int retirerEspeces(String ribCompte, Double montant) throws SystemeBancaireException    
+}
+
+class Banque {
+    #String codeBanque
+    +CompteCourant creerCompteCourant(Personne titulaire, String codeGuichet, Double soldeInitial) throws CompteException
+    +CompteCourant creerCompteCourant(Personne titulaire, String codeGuichet) throws CompteException
+    +CompteEpargne creerCompteEpargne(Personne titulaire, String codeGuichet, Double soldeInitial, Double taux) throws CompteException
+    +CarteBancaire creerCarte(Personne titulaire, CompteBancaire compte)
+    +CarteBancaire lierCarte(CarteBancaire carte, CompteBancaire compte)
+    +void afficherSyntheseComptes()
+    +void afficherSyntheseCartes()
+}
+
+interface SystemeBancaireInterface {
+    +List<String> rechercherRIBCompteCarte(String numCarte)  throws SystemeBancaireException
+    +Integer creerOperation(String ribCompte, String libelle, Double montant)  throws SystemeBancaireException
+    +Boolean verifierCodePin(String numCarte, String codePin)  throws SystemeBancaireException
+}
+
+CompteBancaire "1" *-- "0..n" Operation : operation
+CompteBancaire <|--  CompteCourant
+CompteBancaire <|--  CompteEpargne
+CompteBancaire "1..n" -- "1" Personne : titulaire
+Personne "1" -- "0..n" CarteBancaire
+CompteCourant "1..n" -- "0..n" CarteBancaire
+Gabier --> SystemeBancaireInterface : systemeBancaire 
+Banque --|> SystemeBancaireInterface
+Banque "1" *-- "0..n" CompteBancaire
+Banque "1" *-- "0..n" CarteBancaire
+Exception <|-- CompteException
+Exception <|-- SystemeBancaireException
+@enduml
