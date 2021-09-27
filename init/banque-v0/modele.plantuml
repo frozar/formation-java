@@ -67,7 +67,7 @@ CompteBancaire <|--  CompteCourant
 CompteBancaire <|--  CompteEpargne
 CompteBancaire "1..n" -- "1" Personne : titulaire
 Personne "1" -- "0..n" CarteBancaire
-CompteCourant "1..n" -- "0..n" CarteBancaire
+CompteCourant "1" -- "0..n" CarteBancaire
 Gabier --> SystemeBancaireInterface : systemeBancaire 
 Banque --|> SystemeBancaireInterface
 Banque "1" *-- "0..n" CompteBancaire
