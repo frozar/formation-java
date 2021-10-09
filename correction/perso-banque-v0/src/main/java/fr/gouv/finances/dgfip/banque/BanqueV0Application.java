@@ -1,7 +1,5 @@
 package fr.gouv.finances.dgfip.banque;
 
-import java.util.List;
-
 public class BanqueV0Application {
   public static void main(String[] args) throws Throwable {
     Banque maBanque = new Banque("DGFIP");
@@ -66,7 +64,7 @@ public class BanqueV0Application {
       ceThibault.creerOperation("Retrait", -10000.0);
     } catch (CompteException ce) {
       System.err.println(
-          "*** Impossible de débiter le compteEpargne1: " + ce.getMessage());
+          "*** Impossible de débiter le ceThibault: " + ce.getMessage());
     }
     System.out
         .println("*********************************************************\n");
@@ -114,13 +112,11 @@ public class BanqueV0Application {
     System.out
         .println("*** Retrait de 314 sur le compte courant de Paulette  ***");
     try {
-      List<String> comptesPaulette = gabier1
-          .accesComptes(cbPaulette.getNumCarte(), cbPaulette.getCodePin());
+      String ribComptePaulette = gabier1.accesComptes(cbPaulette.getNumCarte(),
+          cbPaulette.getCodePin());
       System.out.println("*** Liste de comptes de Paulette:");
-      for (String rib : comptesPaulette) {
-        System.out.println("***  - " + rib);
-      }
-      int numOperation = gabier1.retirerEspeces(comptesPaulette.get(0), 314.0);
+      System.out.println("***  - " + ribComptePaulette);
+      int numOperation = gabier1.retirerEspeces(ribComptePaulette, 314.0);
       System.out.format("*** Opération réalisée: %d  ***\n", numOperation);
       ccPaulette.afficherSyntheseOperations();
     } catch (SystemeBancaireException e) {
@@ -135,13 +131,11 @@ public class BanqueV0Application {
     System.out
         .println("*** Tentative retrait de 567 sur le compte de Dominique ***");
     try {
-      List<String> comptesDominique = gabier1
+      String ribCompteDominique = gabier1
           .accesComptes(cbDominique.getNumCarte(), "CODE PIN FAUX");
       System.out.println("*** Liste de comptes de Dominique:");
-      for (String rib : comptesDominique) {
-        System.out.println("***  - " + rib);
-      }
-      int numOperation = gabier1.retirerEspeces(comptesDominique.get(0), 567.0);
+      System.out.println("***  - " + ribCompteDominique);
+      int numOperation = gabier1.retirerEspeces(ribCompteDominique, 567.0);
       System.out.format("*** Opération réalisée: %d  ***", numOperation);
       ccDominique.afficherSyntheseOperations();
     } catch (SystemeBancaireException e) {

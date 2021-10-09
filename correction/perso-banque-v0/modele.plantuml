@@ -41,7 +41,7 @@ class CarteBancaire {
 }
 
 class Gabier {
-    +void accessCompte(String numCarte, String codePin) throws SystemeBancaireException
+    +String accessCompte(String numCarte, String codePin) throws SystemeBancaireException
     +int retirerEspeces(String ribCompte, Double montant) throws SystemeBancaireException    
 }
 
@@ -50,14 +50,14 @@ class Banque {
     +CompteCourant creerCompteCourant(Personne titulaire, String codeGuichet, Double soldeInitial) throws CompteException
     +CompteCourant creerCompteCourant(Personne titulaire, String codeGuichet) throws CompteException
     +CompteEpargne creerCompteEpargne(Personne titulaire, String codeGuichet, Double soldeInitial, Double taux) throws CompteException
-    +CarteBancaire creerCarte(Personne titulaire, CompteBancaire compte)
-    +CarteBancaire lierCarte(CarteBancaire carte, CompteBancaire compte)
+    +CarteBancaire creerCarte(Personne titulaire, CompteCourant compte)
+    +CarteBancaire lierCarte(CarteBancaire carte, CompteCourant compte)
     +void afficherSyntheseComptes()
     +void afficherSyntheseCartes()
 }
 
 interface SystemeBancaireInterface {
-    +List<String> rechercherRIBCompteCarte(String numCarte)  throws SystemeBancaireException
+    +String rechercherRIBCompteCarte(String numCarte)  throws SystemeBancaireException
     +Integer creerOperation(String ribCompte, String libelle, Double montant)  throws SystemeBancaireException
     +Boolean verifierCodePin(String numCarte, String codePin)  throws SystemeBancaireException
 }
@@ -67,7 +67,7 @@ CompteBancaire <|--  CompteCourant
 CompteBancaire <|--  CompteEpargne
 CompteBancaire "1..n" -- "1" Personne : titulaire
 Personne "1" -- "0..n" CarteBancaire
-CompteCourant "1..n" -- "0..n" CarteBancaire
+CompteCourant "1" -- "0..n" CarteBancaire
 Gabier --> SystemeBancaireInterface : systemeBancaire 
 Banque --|> SystemeBancaireInterface
 Banque "1" *-- "0..n" CompteBancaire
