@@ -20,12 +20,6 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.javatuples</groupId>
-      <artifactId>javatuples</artifactId>
-      <version>1.2</version>
-    </dependency>
   </dependencies>
 
   <!-- Documentation link: https://www.baeldung.com/maven-java-version#java9 -->
