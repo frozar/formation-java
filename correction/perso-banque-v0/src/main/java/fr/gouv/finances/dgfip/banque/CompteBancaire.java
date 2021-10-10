@@ -95,7 +95,7 @@ public abstract class CompteBancaire {
     operations
         .add(new Operation(numeroOperation, new Date(), libelle, montant));
     numeroOperation += 1;
-    return operations.size();
+    return numeroOperation;
   }
 
   public String getRib() {

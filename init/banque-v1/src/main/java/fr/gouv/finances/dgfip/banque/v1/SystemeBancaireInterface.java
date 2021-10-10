@@ -1,4 +1,4 @@
-package fr.gouv.finances.dgfip.banque;
+package fr.gouv.finances.dgfip.banque.v1;
 
 public interface SystemeBancaireInterface {
   String rechercheRIBCompteCarte(String numCarte)

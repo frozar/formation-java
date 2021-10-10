@@ -1,4 +1,4 @@
-package fr.gouv.finances.dgfip.banque;
+package fr.gouv.finances.dgfip.banque.v1;
 
 public class Util {
   public static String padLeft(String inputString, int length, char paddingChar) {

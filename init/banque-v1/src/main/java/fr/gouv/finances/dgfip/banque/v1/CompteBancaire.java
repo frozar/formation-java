@@ -1,4 +1,4 @@
-package fr.gouv.finances.dgfip.banque;
+package fr.gouv.finances.dgfip.banque.v1;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

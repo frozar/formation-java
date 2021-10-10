@@ -1,17 +1,18 @@
 package fr.gouv.finances.dgfip.banque.v1.entites;
 
-import java.util.Date;
-
-import fr.gouv.finances.dgfip.banque.v1.CompteException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CompteCourant extends CompteBancaire {
+  /********************************/
+  private Set<CarteBancaire> setCarte = new HashSet<CarteBancaire>();
 
+  /********************************/
   public CompteCourant(String codeBanque, String codeGuichet, String numCompte,
       String cle, Double solde) {
     super(codeBanque, codeGuichet, numCompte, cle, solde);
   }
 
-  @Override
   public Double calculerSolde() {
 //  System.out.println("calculerSolde");
     Double solde = this.solde;
@@ -21,17 +22,8 @@ public class CompteCourant extends CompteBancaire {
     return solde;
   }
 
-  @Override
-  public Operation creerOperation(String libelle, Double montant)
-      throws CompteException {
-    Operation newOperation = new Operation(operations.size(), new Date(),
-        libelle, montant);
-    operations.add(newOperation);
-    return newOperation;
-  }
-
-  @Override
-  public String getType() {
-    return "Compte courant";
+  /********************************/
+  public void addCarte(CarteBancaire newCarteBancaire) {
+    setCarte.add(newCarteBancaire);
   }
 }

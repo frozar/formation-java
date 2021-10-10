@@ -1,4 +1,4 @@
-package fr.gouv.finances.dgfip.banque;
+package fr.gouv.finances.dgfip.banque.v1;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package fr.gouv.finances.dgfip.banque;
+package fr.gouv.finances.dgfip.banque.v1;
 
 public class CompteException extends Exception {
   private static final long serialVersionUID = 4956588939715236834L;

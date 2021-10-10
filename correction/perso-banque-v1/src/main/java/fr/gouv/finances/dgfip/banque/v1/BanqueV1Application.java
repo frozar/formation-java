@@ -1,7 +1,5 @@
 package fr.gouv.finances.dgfip.banque.v1;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +10,7 @@ import fr.gouv.finances.dgfip.banque.v1.entites.Banque;
 import fr.gouv.finances.dgfip.banque.v1.entites.CarteBancaire;
 import fr.gouv.finances.dgfip.banque.v1.entites.CompteCourant;
 import fr.gouv.finances.dgfip.banque.v1.entites.CompteEpargne;
+import fr.gouv.finances.dgfip.banque.v1.entites.Operation;
 import fr.gouv.finances.dgfip.banque.v1.entites.Personne;
 import fr.gouv.finances.dgfip.banque.v1.services.BanqueServiceInterface;
 import fr.gouv.finances.dgfip.banque.v1.services.CompteBancaireServiceInterface;
@@ -113,14 +112,14 @@ public class BanqueV1Application {
     LOGGER.info("*********************************************************");
     LOGGER.info("*** Retrait de 314 sur le compte courant de Paulette  ***");
     try {
-      List<String> comptesPaulette = gabier1.accesComptes(maBanque,
+      String ribComptePaulette = gabier1.accesComptes(maBanque,
           cbPaulette.getNumCarte(), cbPaulette.getCodePin());
       LOGGER.info("*** Liste de comptes de Paulette:");
-      for (String rib : comptesPaulette) {
-        LOGGER.info("***  - " + rib);
-      }
-      int numOperation = gabier1.retirerEspeces(maBanque,
-          comptesPaulette.get(0), 314.0);
+      LOGGER.info("***  - " + ribComptePaulette);
+//      int numOperation = gabier1.retirerEspeces(maBanque,
+//          ribComptePaulette, 314.0);
+      Operation op = gabier1.retirerEspeces(maBanque, ribComptePaulette, 314.0);
+      int numOperation = op.getNumOperation();
       LOGGER
           .info(String.format("*** Opération réalisée: %d  ***", numOperation));
       compteBancaireService.afficherSyntheseOperations(ccPaulette);
@@ -133,14 +132,13 @@ public class BanqueV1Application {
     LOGGER.info("***********************************************************");
     LOGGER.info("*** Tentative retrait de 567 sur le compte de Dominique ***");
     try {
-      List<String> comptesDominique = gabier1.accesComptes(maBanque,
+      String ribCompteDominique = gabier1.accesComptes(maBanque,
           cbDominique.getNumCarte(), "CODE PIN FAUX");
       LOGGER.info("*** Liste de comptes de Dominique:");
-      for (String rib : comptesDominique) {
-        LOGGER.info("***  - " + rib);
-      }
-      int numOperation = gabier1.retirerEspeces(maBanque,
-          comptesDominique.get(0), 567.0);
+      LOGGER.info("***  - " + ribCompteDominique);
+      Operation op = gabier1.retirerEspeces(maBanque, ribCompteDominique,
+          567.0);
+      int numOperation = op.getNumOperation();
       LOGGER
           .info(String.format("*** Opération réalisée: %d  ***", numOperation));
     } catch (SystemeBancaireException e) {
