@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>injection</artifactId>
+	<artifactId>01_injection</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>injection</name>
+	<name>01_injection</name>
 	<description>Spring Boot - Injection de dépendance</description>
 	<properties>
 		<java.version>11</java.version>
