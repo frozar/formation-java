@@ -3,7 +3,7 @@ package fr.gouv.finances.dgfip.banque.v1.services.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import fr.gouv.finances.dgfip.banque.v1.CompteException;
 import fr.gouv.finances.dgfip.banque.v1.entites.CompteBancaire;
@@ -12,7 +12,7 @@ import fr.gouv.finances.dgfip.banque.v1.entites.Operation;
 import fr.gouv.finances.dgfip.banque.v1.entites.Personne;
 import fr.gouv.finances.dgfip.banque.v1.services.CompteBancaireServiceInterface;
 
-@Component
+@Service
 public class CompteBancaireService implements CompteBancaireServiceInterface {
 
   @Override

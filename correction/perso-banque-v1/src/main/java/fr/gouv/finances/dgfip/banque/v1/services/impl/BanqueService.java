@@ -7,7 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import fr.gouv.finances.dgfip.banque.v1.CompteException;
 import fr.gouv.finances.dgfip.banque.v1.entites.Banque;
@@ -18,7 +18,7 @@ import fr.gouv.finances.dgfip.banque.v1.entites.CompteEpargne;
 import fr.gouv.finances.dgfip.banque.v1.entites.Personne;
 import fr.gouv.finances.dgfip.banque.v1.services.BanqueServiceInterface;
 
-@Component
+@Service
 public class BanqueService implements BanqueServiceInterface {
 
   @Override

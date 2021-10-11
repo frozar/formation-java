@@ -1,11 +1,11 @@
 package fr.gouv.finances.dgfip.banque.v1.services.impl;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import fr.gouv.finances.dgfip.banque.v1.entites.Personne;
 import fr.gouv.finances.dgfip.banque.v1.services.PersonneServiceInterface;
 
-@Component
+@Service
 public class PersonneService implements PersonneServiceInterface {
 
   @Override
