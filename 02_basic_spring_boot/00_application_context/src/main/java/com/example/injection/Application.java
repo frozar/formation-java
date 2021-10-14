@@ -3,6 +3,7 @@ package com.example.injection;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Application {
@@ -11,17 +12,25 @@ public class Application {
     ApplicationContext context = SpringApplication.run(Application.class, args);
 
     Article article = context.getBean(Article.class);
-    article.setNom("livre");
-    System.out.println(article.getNom());
+//    article.setNom("livre");
+    System.out.println("Mon message " + article.getNom());
 
-//    Transport transport = context.getBean(Transport.class);
+    Transport transport = context.getBean(Transport.class);
 //    transport.setNom("voiture");
-//    System.out.println(transport.getNom());
+    System.out.println(transport.getNom());
+
+//    Transport t = new Transport("mon transport");
+
   }
 
-//  @Bean
-//  public String beanExample() {
-//    return new String();
+  @Bean
+  public String beanExample() {
+    return new String("TOTO");
+  }
+
+//  @Bean("string2")
+//  public String beanExample2() {
+//    return new String("TATA");
 //  }
 
 }

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 public class Transport {
   private String nom;
 
-//  public Transport(String nom) {
-//    this.nom = nom;
-//  }
+  public Transport(String nom) {
+    this.nom = nom;
+  }
 
   public String getNom() {
     return nom;
