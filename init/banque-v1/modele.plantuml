@@ -36,12 +36,12 @@ package entites {
 
 package services {
     interface BanqueServiceInterface {
-        +CompteCourant creerCompteCourant(BanqueDGFiP banque, Personne titulaire, String guichet, Double soldeInitial) throws CompteException
-        +CompteCourant creerCompteCourant(BanqueDGFiP banque, Personne titulaire, String guichet) throws CompteException
-        +CompteEpargne creerCompteEpargne(BanqueDGFiP banque, Personne titulaire, String guichet, Double soldeInitial, Double taux) throws CompteException
-        +CarteBancaire creerCarte(BanqueDGFiP banque, Personne titulaire, CompteCourant compte) throws CompteException
-        +void afficherSyntheseComptes(BanqueDGFiP banque)
-        +void afficherSyntheseCartes(BanqueDGFiP banque)
+        +CompteCourant creerCompteCourant(Banque banque, Personne titulaire, String guichet, Double soldeInitial) throws CompteException
+        +CompteCourant creerCompteCourant(Banque banque, Personne titulaire, String guichet) throws CompteException
+        +CompteEpargne creerCompteEpargne(Banque banque, Personne titulaire, String guichet, Double soldeInitial, Double taux) throws CompteException
+        +CarteBancaire creerCarte(Banque banque, Personne titulaire, CompteCourant compte) throws CompteException
+        +void afficherSyntheseComptes(Banque banque)
+        +void afficherSyntheseCartes(Banque banque)
     }
     interface CompteBancaireServiceInterface {
         +Operation creerOperation(CompteBancaire compte, String libelle, Double montant) throws CompteException
@@ -68,14 +68,14 @@ package services.impl {
 
 
 interface SystemeBancaireInterface {
-    +List<String> rechercherRIBCompteCarte(BanqueDGFiP banque, String numCarte) throws SystemeBancaireException;
-    +boolean verifierCodePin(BanqueDGFiP banque, String numCarte, String codePin) throws SystemeBancaireException;
-    +int creerOperation(BanqueDGFiP banque, String ribCompte, String libelle, Double montant) throws SystemeBancaireException;
+    +List<String> rechercherRIBCompteCarte(Banque banque, String numCarte) throws SystemeBancaireException;
+    +boolean verifierCodePin(Banque banque, String numCarte, String codePin) throws SystemeBancaireException;
+    +int creerOperation(Banque banque, String ribCompte, String libelle, Double montant) throws SystemeBancaireException;
 }
 
 class Gabier <<Component>> {
-    +void accessCompte(String numCarte, codePin) throws SystemeBancaireException
-    +int retirerEspeces(String ribCompte, Double montant) throws SystemeBancaireException    
+    +void accessCompte(Banque banque, String numCarte, codePin) throws SystemeBancaireException
+    +int retirerEspeces(Banque banque, String ribCompte, Double montant) throws SystemeBancaireException    
 }
 
 
