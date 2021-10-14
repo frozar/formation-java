@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>qualifier</artifactId>
+	<artifactId>02_qualifier</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>01_qualifier</name>
+	<name>02_qualifier</name>
 	<description>Spring Boot - Qualifier</description>
 	<properties>
 		<java.version>11</java.version>
