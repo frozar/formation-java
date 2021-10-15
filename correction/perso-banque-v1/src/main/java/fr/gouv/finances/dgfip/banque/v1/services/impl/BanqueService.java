@@ -99,6 +99,13 @@ public class BanqueService implements BanqueServiceInterface {
             + "| Type compte     | RIB                      | Titulaire            | Solde      |\n"
             + "+-----------------+--------------------------+----------------------+------------+");
 
+    System.out.print(afficherSyntheseComptesString(banque));
+    System.out.println(
+        "+-----------------+--------------------------+----------------------+------------+");
+  }
+
+  public String afficherSyntheseComptesString(Banque banque) {
+    String res = "";
     for (CompteBancaire compte : banque.getSetCompteBancaire()) {
       Personne titulaire = compte.getTitulaire();
       String compteType = compte instanceof CompteCourant ? "Compte courant"
@@ -108,11 +115,12 @@ public class BanqueService implements BanqueServiceInterface {
       String fullName = titulaire.getNom() + " " + titulaire.getPrenom();
       String paddedFullName = String.format("%-20s", fullName);
       String paddedSolde = String.format("%10.2f", compte.calculerSolde());
-      System.out.println("| " + paddedCompteType + " | " + paddedRib + " | "
-          + paddedFullName + " | " + paddedSolde + " |");
+//      System.out.println("| " + paddedCompteType + " | " + paddedRib + " | "
+//          + paddedFullName + " | " + paddedSolde + " |");
+      res += "| " + paddedCompteType + " | " + paddedRib + " | "
+          + paddedFullName + " | " + paddedSolde + " |\n";
     }
-    System.out.println(
-        "+-----------------+--------------------------+----------------------+------------+");
+    return res;
   }
 
   @Override
