@@ -12,7 +12,7 @@
   <groupId>fr.gouv.finances.dgfip.esi974</groupId>
   <artifactId>banque.v2</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Banque_V1</name>
+  <name>Banque_V2</name>
   <description>Application Banque</description>
   <properties>
     <java.version>11</java.version>
