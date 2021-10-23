@@ -1,0 +1,95 @@
+package fr.gouv.finances.dgfip.banque.v2.entites;
+
+import java.time.ZonedDateTime;
+import java.util.UUID;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+
+@Entity
+public class Operation
+{
+    @Id
+    @GeneratedValue
+    private UUID id;
+    private int numOperation;
+    private ZonedDateTime dateOperation;
+    private String libelle;
+    private Double montant;
+    @ManyToOne
+    private CompteBancaire compte;
+    
+    public Operation() {
+        
+    }
+    
+    public Operation(int numOperation, String libelle, Double montant ) {
+        this();
+        this.numOperation = numOperation;
+        this.libelle = libelle;
+        this.montant = montant;
+        this.dateOperation = ZonedDateTime.now();
+    }
+    
+    public Operation(int numOperation, Double montant) {
+        this(numOperation, "", montant);
+    }
+
+    public int getNumOperation()
+    {
+        return numOperation;
+    }
+
+    public void setNumOperation(int numOperation)
+    {
+        this.numOperation = numOperation;
+    }
+
+    public ZonedDateTime getDateOperation()
+    {
+        return dateOperation;
+    }
+
+    public void setDateOperation(ZonedDateTime dateOperation)
+    {
+        this.dateOperation = dateOperation;
+    }
+
+    public String getLibelle()
+    {
+        return libelle;
+    }
+
+    public void setLibelle(String libelle)
+    {
+        this.libelle = libelle;
+    }
+
+    public Double getMontant()
+    {
+        return montant;
+    }
+
+    public void setMontant(Double montant)
+    {
+        this.montant = montant;
+    }
+
+    public UUID getId()
+    {
+        return id;
+    }
+
+    public void setId(UUID id)
+    {
+        this.id = id;
+    }
+
+    public void setCompte(CompteBancaire compte)
+    {
+        this.compte = compte;
+    }
+}
