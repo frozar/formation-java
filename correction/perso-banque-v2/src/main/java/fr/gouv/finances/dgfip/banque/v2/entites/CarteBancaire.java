@@ -20,14 +20,10 @@ public class CarteBancaire {
   private Date dateExpiration;
 
   /********************************/
-  // PERSIST, MERGE, REMOVE, REFRESH, DETACH
-//  @ManyToOne(cascade = { CascadeType.ALL })
   @ManyToOne
   private Banque banque;
-//  @ManyToOne(cascade = CascadeType.ALL)
   @ManyToOne
   private Personne titulaire;
-//  @ManyToOne(cascade = CascadeType.ALL)
   @ManyToOne
   private CompteCourant compteCourant;
 

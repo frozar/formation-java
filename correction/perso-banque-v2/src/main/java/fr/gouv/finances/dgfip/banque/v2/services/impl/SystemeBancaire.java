@@ -17,12 +17,8 @@ import fr.gouv.finances.dgfip.banque.v2.services.CompteBancaireServiceInterface;
 @Service
 public class SystemeBancaire implements SystemeBancaireInterface {
 
-  private CompteBancaireServiceInterface compteBancaireService;
-
   @Autowired
-  public SystemeBancaire(CompteBancaireServiceInterface compteBancaireService) {
-    this.compteBancaireService = compteBancaireService;
-  }
+  private CompteBancaireServiceInterface compteBancaireService;
 
   @Override
   public String rechercheRIBCompteCarte(Banque banque, String numCarte)

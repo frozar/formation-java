@@ -8,8 +8,9 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class CompteCourant extends CompteBancaire {
+
   /********************************/
-  @OneToMany
+  @OneToMany(mappedBy = "compteCourant")
   private Set<CarteBancaire> setCarte = new HashSet<CarteBancaire>();
 
   /********************************/

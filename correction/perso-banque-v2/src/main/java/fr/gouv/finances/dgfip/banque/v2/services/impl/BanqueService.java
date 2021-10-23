@@ -81,7 +81,6 @@ public class BanqueService implements BanqueServiceInterface {
     return compteBancaireDao.save(newCompteEpargne);
   }
 
-//  @Transactional
   @Override
   public CarteBancaire creerCarte(Banque banque, Personne titulaire,
       CompteCourant compteCourant) throws CompteException {
@@ -101,21 +100,15 @@ public class BanqueService implements BanqueServiceInterface {
     newCarteBancaire.setBanque(banque);
     newCarteBancaire.setCompteCourant(compteCourant);
     newCarteBancaire.setTitulaire(titulaire);
-//    titulaire.addCarte(newCarteBancaire);
-//    compteCourant.addCarte(newCarteBancaire);
-//    banque.addCarte(newCarteBancaire);
 
-    CarteBancaire savedCarteBancaire = carteBancaireDao.save(newCarteBancaire);
-
-    titulaire.addCarte(savedCarteBancaire);
-    compteCourant.addCarte(savedCarteBancaire);
-    banque.addCarte(savedCarteBancaire);
+    titulaire.addCarte(newCarteBancaire);
+    compteCourant.addCarte(newCarteBancaire);
+    banque.addCarte(newCarteBancaire);
     personneDao.save(titulaire);
     compteBancaireDao.save(compteCourant);
     banqueDao.save(banque);
 
-//    return newCarteBancaire;
-    return savedCarteBancaire;
+    return carteBancaireDao.save(newCarteBancaire);
   }
 
   @Override

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.gouv.finances.dgfip.banque.v2.CompteException;
-import fr.gouv.finances.dgfip.banque.v2.dao.CompteBancaireDao;
 import fr.gouv.finances.dgfip.banque.v2.dao.OperationDao;
 import fr.gouv.finances.dgfip.banque.v2.entites.CompteBancaire;
 import fr.gouv.finances.dgfip.banque.v2.entites.CompteEpargne;
@@ -20,11 +19,8 @@ public class CompteBancaireService implements CompteBancaireServiceInterface {
 
   @Autowired
   private OperationDao operationDao;
-  @Autowired
-  private CompteBancaireDao compteBancaireDao;
 
   @Override
-//  @Transactional
   public Operation creerOperation(CompteBancaire compte, String libelle,
       Double montant) throws CompteException {
     if (compte instanceof CompteEpargne) {
@@ -38,11 +34,6 @@ public class CompteBancaireService implements CompteBancaireServiceInterface {
     compte.addOperation(operation);
     compte.setNumeroOperation(numeroOperation + 1);
     return operationDao.save(operation);
-//    Operation savedOperation = operationDao.save(operation);
-//    compteBancaireDao.save(compte);
-//    return savedOperation;
-//    compteBancaireDao.save(compte);
-//    return operation;
   }
 
   @Override

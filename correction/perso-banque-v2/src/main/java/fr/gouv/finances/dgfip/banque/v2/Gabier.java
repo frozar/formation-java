@@ -33,13 +33,8 @@ import fr.gouv.finances.dgfip.banque.v2.entites.Operation;
 
 @Component
 public class Gabier {
-
-  private SystemeBancaireInterface systemeBancaire;
-
   @Autowired
-  public Gabier(SystemeBancaireInterface systemeBancaire) {
-    this.systemeBancaire = systemeBancaire;
-  }
+  private SystemeBancaireInterface systemeBancaire;
 
   public String accesComptes(Banque banque, String numCarte, String codePin)
       throws SystemeBancaireException {

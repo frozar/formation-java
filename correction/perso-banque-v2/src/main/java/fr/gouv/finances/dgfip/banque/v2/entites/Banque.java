@@ -21,7 +21,6 @@ public class Banque {
   /********************************/
   @OneToMany(mappedBy = "banque")
   private Set<CompteBancaire> setCompteBancaire = new HashSet<CompteBancaire>();
-//  @JoinTable(name = "banque_set_carte_bis", joinColumns = @JoinColumn(name = "carte_id"), inverseJoinColumns = @JoinColumn(name = "banque_id"))
   @OneToMany(mappedBy = "banque")
   private Set<CarteBancaire> setCarte = new HashSet<CarteBancaire>();
 
