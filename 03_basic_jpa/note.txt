@@ -413,7 +413,7 @@ em.persist(c)  // la jointure en DB va bien être créée
 
 m.getCommune() -> NULL // en création, dans une relation bidirectionnelle en DB, c'est le code Java qui doit le gérer.
 
-// Il faire en Java l'association de "m" à "c" dans la création
+// Il fait en Java l'association de "m" à "c" dans la création
 m.setCommune(c)
 
 Ex. 2
@@ -875,7 +875,7 @@ Pro : pas de problème avec les requêtes polymorphiques.
 ## Stratégie JOINED
 
 1 entité = 1 table
-1 entité qui étend une autre entité est en relation 1:1 avec cett entité.
+1 entité qui étend une autre entité est en relation 1:1 avec cette entité.
 
 DB : les tables
 User
