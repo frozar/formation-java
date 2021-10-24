@@ -27,19 +27,22 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
 public class CustomerRepositoryTests {
-	@Autowired
-	private TestEntityManager entityManager;
 
-	@Autowired
-	private CustomerRepository customers;
+  @Autowired
+  private TestEntityManager entityManager;
 
-	@Test
-	public void testFindByLastName() {
-		Customer customer = new Customer("first", "last");
-		entityManager.persist(customer);
+  @Autowired
+  private CustomerRepository customers;
 
-		List<Customer> findByLastName = customers.findByLastName(customer.getLastName());
+  @Test
+  public void testFindByLastName() {
+    Customer customer = new Customer("first", "last");
+    entityManager.persist(customer);
 
-		assertThat(findByLastName).extracting(Customer::getLastName).containsOnly(customer.getLastName());
-	}
+    List<Customer> findByLastName = customers
+        .findByLastName(customer.getLastName());
+
+    assertThat(findByLastName).extracting(Customer::getLastName)
+        .containsOnly(customer.getLastName());
+  }
 }
