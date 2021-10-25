@@ -24,7 +24,7 @@ public class Departement {
   private String nom;
 
   // orphanRemoval : delete commune which doesn't bellow to a departement
-  @OneToMany(cascade = { CascadeType.PERSIST,
+  @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
       CascadeType.REMOVE }, fetch = FetchType.EAGER, orphanRemoval = true)
   Set<Commune> communes = new HashSet<Commune>();
 

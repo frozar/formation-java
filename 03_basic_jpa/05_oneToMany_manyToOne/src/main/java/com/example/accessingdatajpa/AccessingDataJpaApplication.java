@@ -51,24 +51,24 @@ public class AccessingDataJpaApplication {
 
       log.info(reunion.toString());
 
-      log.info("####### Ajouter une commune");
-      log.info("tentative 1");
-      log.info(" => n'est pas ajouter au département, "
-          + "génére une commune avec un id null");
+//      log.info("####### Ajouter une commune");
+//      log.info("tentative 1");
+//      log.info(" => n'est pas ajouter au département, "
+//          + "génére une commune avec un id null");
 //      Commune sainteRose = new Commune("Sainte Rose");
 //      sainteRose.setDepartement(reunion);
 //      log.info(sainteRose.toString());
 //      communes.add(sainteRose);
-////      try {
-////        departementRepository.save(reunion);
-////      } catch (Exception e) {
-////        log.error(e.getMessage());
-////      }
-////      // displayDB();
+//      try {
+//        departementRepository.save(reunion);
+//      } catch (Exception e) {
+//        log.error(e.getMessage());
+//      }
+      // displayDB();
 
-      log.info("tentative 2");
-      log.info(" => n'est pas ajouter au département, "
-          + "mais présent dans la table des communes.");
+//      log.info("tentative 2");
+//      log.info(" => n'est pas ajouter au département, "
+//          + "mais présent dans la table des communes.");
 //      communeRepository.save(sainteRose);
 //      departementRepository.save(reunion);
 //      displayDB();
@@ -85,35 +85,35 @@ public class AccessingDataJpaApplication {
       Commune sainteRose = new Commune("Sainte Rose");
       sainteRose.setDepartement(run);
 
-      // Enregistrement de la commune en DB
-      communeRepository.save(sainteRose);
-      log.info(sainteRose.toString());
+//      // Enregistrement de la commune en DB
+//      communeRepository.save(sainteRose);
+//      log.info(sainteRose.toString());
 
       // Association de la commune au département et enregistrement en DB
       runCommunes.add(sainteRose);
       departementRepository.save(run);
       displayDB();
 
-      log.info("tentative 4");
-      run = departementService.addCommune("Réunion", "Saint André");
-      displayDB();
-
-      log.info("####### Supprimer une commune");
-      log.info("tentative 1");
-      run = departementService.deleteCommune("Réunion", "Saint André");
-      displayDB();
-
-      log.info("####### Modifier une commune");
-      log.info("tentative 1");
-      Commune c = communeRepository.findById(2L).get();
-      c.setNom("Bras Panon");
-      communeRepository.save(c);
-      displayDB();
-
-      log.info("####### Supprimer un département");
-      log.info("tentative 1");
-      departementRepository.delete(run);
-      displayDB();
+//      log.info("tentative 4");
+//      run = departementService.addCommune("Réunion", "Saint André");
+//      displayDB();
+//
+//      log.info("####### Supprimer une commune");
+//      log.info("tentative 1");
+//      run = departementService.deleteCommune("Réunion", "Saint André");
+//      displayDB();
+//
+//      log.info("####### Modifier une commune");
+//      log.info("tentative 1");
+//      Commune c = communeRepository.findById(2L).get();
+//      c.setNom("Bras Panon");
+//      communeRepository.save(c);
+//      displayDB();
+//
+//      log.info("####### Supprimer un département");
+//      log.info("tentative 1");
+//      departementRepository.delete(run);
+//      displayDB();
     };
   }
 
