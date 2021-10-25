@@ -20,7 +20,7 @@ public class DepartementServiceImpl implements DepartementService {
     if (departement == null)
       return null;
     Commune commune = new Commune(communeNom);
-    communeRepository.save(commune);
+//    communeRepository.save(commune);
     departement.getCommunes().add(commune);
     departementRepository.save(departement);
     return departement;

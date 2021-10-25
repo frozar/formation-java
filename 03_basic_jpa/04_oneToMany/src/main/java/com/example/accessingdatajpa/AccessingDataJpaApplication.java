@@ -46,26 +46,29 @@ public class AccessingDataJpaApplication {
       departementRepository.save(reunion);
       displayDB();
 
-      log.info("####### Ajouter une commune");
-      log.info("tentative 1");
-      log.info(" => n'est pas ajouter au département, "
-          + "génére une commune avec un nom null");
-      Commune sainteRose = new Commune("Sainte Rose");
-      communes.add(sainteRose);
-      departementRepository.save(reunion);
-      displayDB();
+//      log.info("####### Ajouter une commune");
+//      log.info("tentative 1");
+//      log.info(" => n'est pas ajouter au département, "
+//          + "génére une commune avec un nom null");
+//      Commune sainteRose = new Commune("Sainte Rose");
+//      communes.add(sainteRose);
+//      departementRepository.save(reunion);
+//      displayDB();
 
-      log.info("tentative 2");
-      log.info(" => n'est pas ajouter au département, "
-          + "génére une commune avec le bon nom 'Sainte Rose'");
-      communeRepository.save(sainteRose);
-      departementRepository.save(reunion);
-      displayDB();
-      communeRepository.deleteById(4L);
+//      log.info("tentative 2");
+//      log.info(" => n'est pas ajouter au département, "
+//          + "génére une commune avec le bon nom 'Sainte Rose'");
+//      Commune sainteRose = new Commune("Sainte Rose");
+//      communeRepository.save(sainteRose);
+//      communes.add(sainteRose);
+//      departementRepository.save(reunion);
+//      displayDB();
+//      communeRepository.deleteById(4L);
 
       log.info("tentative 3");
       log.info(" => ajout correctement la commune 'Sainte Rose'");
       Departement run = departementRepository.findById(1L).get();
+      Commune sainteRose = new Commune("Sainte Rose");
       Set<Commune> runCommunes = run.getCommunes();
       runCommunes.add(sainteRose);
       departementRepository.save(run);
