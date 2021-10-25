@@ -20,6 +20,9 @@ public class AccessingDataJpaApplication {
   @Autowired
   private DepartementRepository departementRepository;
 
+  @Autowired
+  private FetchServiceInterface fetchService;
+
   private static final Logger log = LoggerFactory
       .getLogger(AccessingDataJpaApplication.class);
 
@@ -57,6 +60,7 @@ public class AccessingDataJpaApplication {
       communeRepository.delete(saintBenoit);
       departementRepository.delete(run);
       displayDB();
+      fetchService.fetchBehavior();
     };
   }
 

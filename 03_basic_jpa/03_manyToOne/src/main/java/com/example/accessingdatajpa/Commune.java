@@ -2,6 +2,7 @@ package com.example.accessingdatajpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,9 +23,12 @@ public class Commune {
 
   // L'annotation "@ManyToOne" permet de créer la relation entre Commune et
   // Departement.
-  @ManyToOne
+  // interprétation de @ManyToOne : plusieurs Commune appartiennent à un
+  // département
+//  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "DEPARTEMENT_ID", nullable = false, updatable = false)
-  Departement departement;
+  private Departement departement;
 
   protected Commune() {
   }
