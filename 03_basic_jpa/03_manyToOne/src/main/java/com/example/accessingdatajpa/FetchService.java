@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+// Documentation link:
+// https://stackoverflow.com/questions/53836776/lazyinitializationexception-spring-boot
+
 @Service
 public class FetchService implements FetchServiceInterface {
 
