@@ -59,6 +59,7 @@ public class Commune {
   public String toString() {
     return "Commune [id=" + id + ", nom=" + nom + ", maire=" + maire.getNom()
         + " " + maire.getPrenom() + "]";
+//    return "Commune [id=" + id + ", nom=" + nom + ", maire=" + maire + "]";
   }
 
 }

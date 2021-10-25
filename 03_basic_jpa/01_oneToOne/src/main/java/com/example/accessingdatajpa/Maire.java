@@ -13,7 +13,9 @@ import javax.persistence.UniqueConstraint;
 // https://www.baeldung.com/jpa-unique-constraints
 @Table(uniqueConstraints = {
     @UniqueConstraint(name = "Unique_Nom_And_Prenom", columnNames = { "nom",
-        "prenom" }) })
+        "prenom" }),
+    // @UniqueConstraint(name = "Unique_Nom", columnNames = { "nom" })
+})
 
 @Entity
 public class Maire {
@@ -27,7 +29,7 @@ public class Maire {
 
   // L'argument "mappedBy" passé à l'annotation "@OneToOne" permet de créer une
   // relation bidirectionnelle entre Commune et Maire. Sans cet argument, un
-  // champ de clé étrangère "ID_Commune" aurait été créé dans la table "Maire"
+  // champ de clé étrangère "COMMUNE_ID" aurait été créé dans la table "Maire"
   // ce qui peut entrainer des états incohérents de la DB.
   @OneToOne(mappedBy = "maire")
   private Commune commune;
@@ -62,6 +64,14 @@ public class Maire {
 
   public void setPrenom(String prenom) {
     this.prenom = prenom;
+  }
+
+  public Commune getCommune() {
+    return commune;
+  }
+
+  public void setCommune(Commune commune) {
+    this.commune = commune;
   }
 
   @Override

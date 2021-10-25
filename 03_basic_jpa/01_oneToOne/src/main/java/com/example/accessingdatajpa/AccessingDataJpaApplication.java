@@ -26,6 +26,8 @@ public class AccessingDataJpaApplication {
       Commune saintDenis = new Commune("Saint Denis");
       Maire maireSaintDenis = new Maire("BAREIGTS", "Ericka");
       saintDenis.setMaire(maireSaintDenis);
+//      maireSaintDenis.setCommune(saintDenis);
+//      System.out.println("maireSaintDenis" + maireSaintDenis);
 
       Commune saintBenoit = new Commune("Saint Benoit");
       Maire maireSaintBenoit = new Maire("SELLY", "Patrice");
@@ -93,23 +95,23 @@ public class AccessingDataJpaApplication {
       }
       log.info("");
 
-//      // fetch an individual commune by ID
-//      commune = communeRepository.findById(2L);
-//      log.info("Commune found with findById(2L):");
-//      log.info("--------------------------------");
-//      log.info(commune.toString());
-//      log.info("");
-//
-//      // fetch communes by nom
-//      log.info("Commune found with findByNom('Saint Benoit'):");
-//      log.info("--------------------------------------------");
-//      communeRepository.findByNom("Saint Benoit").forEach(c -> {
-//        log.info(c.toString());
-//      });
-//      // for (Commune commune : repository.findByNome("Saint Benoit")) {
-//      // log.info(commune.toString());
-//      // }
-//      log.info("");
+      // fetch an individual commune by ID
+      commune = communeRepository.findById(2L);
+      log.info("Commune found with findById(2L):");
+      log.info("--------------------------------");
+      log.info(commune.toString());
+      log.info("");
+
+      // fetch communes by nom
+      log.info("Commune found with findByNom('Saint Benoit'):");
+      log.info("--------------------------------------------");
+      communeRepository.findByNom("Saint Benoit").forEach(c -> {
+        log.info(c.toString());
+      });
+      // for (Commune commune : repository.findByNome("Saint Benoit")) {
+      // log.info(commune.toString());
+      // }
+      log.info("");
     };
   }
 
