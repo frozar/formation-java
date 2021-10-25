@@ -1,6 +1,5 @@
 package com.example.accessingdatajpa;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,8 +17,8 @@ public class Commune {
   // Relation de composition entre Commune et Maire :
   // Si une commune est supprimé, son maire l'est aussi. L'entité Maire
   // se retrouve dans la même table que Commune.
+  // @Column(nullable = false)
   @Embedded
-  @Column(nullable = false)
   private Maire maire;
 
   protected Commune() {

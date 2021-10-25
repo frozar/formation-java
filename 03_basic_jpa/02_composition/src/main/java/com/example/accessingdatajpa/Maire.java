@@ -8,9 +8,9 @@ public class Maire {
 
   // Pour éviter la colision des noms de colonnes entre les entités Commune et
   // Maire, les noms de colonnes de Maire sont ajustés avec l'annotation @Column
-  @Column(name = "maire_nom")
+  @Column(name = "maire_nom", nullable = false)
   private String nom;
-  @Column(name = "maire_prenom")
+  @Column(name = "maire_prenom", nullable = false)
   private String prenom;
 
   public Maire() {

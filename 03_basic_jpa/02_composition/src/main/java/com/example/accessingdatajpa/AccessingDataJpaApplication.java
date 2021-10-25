@@ -51,19 +51,22 @@ public class AccessingDataJpaApplication {
       }
       log.info("");
 
-//      // Impossible d'enregistré une commune se elle n'a pas de Maire associé
-//      // => conséquence de l'annotation @Column(nullable = false)
-//      Commune plaineDesPalmistes = new Commune("La Plaine des Palmistes");
-//      communeRepository.save(plaineDesPalmistes);
-//
-//      // fetch all customers
-//      log.info("nullable = false:");
-//      log.info("-------------------------------");
-//      for (Commune commune : communeRepository.findAll()) {
-//        log.info("commune : " + commune);
-//      }
-//      log.info("");
+      // Impossible d'enregistré une commune si elle n'a pas de Maire associé
+      // => conséquence de l'annotation @Column(nullable = false)
+      try {
+        Commune plaineDesPalmistes = new Commune("La Plaine des Palmistes");
+        communeRepository.save(plaineDesPalmistes);
+      } catch (Exception e) {
+        log.error(e.getMessage());
+      }
 
+      // fetch all customers
+      log.info("nullable = false:");
+      log.info("-------------------------------");
+      for (Commune commune : communeRepository.findAll()) {
+        log.info("commune : " + commune);
+      }
+      log.info("");
     };
   }
 
