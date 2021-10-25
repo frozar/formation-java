@@ -1,5 +1,7 @@
 package com.example.accessingdatajpa;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,14 @@ public class RunModern {
     log.info("");
 
     // fetch an individual customer by ID
-    Customer customer = repository.findById(1L);
     log.info("Customer found with findById(1L):");
     log.info("--------------------------------");
-    log.info(customer.toString());
+    Optional<Customer> customerOptinal = repository.findById(1L);
+    if (customerOptinal.isPresent()) {
+      log.info(customerOptinal.get().toString());
+    } else {
+      log.info("Customer not Found");
+    }
     log.info("");
 
     // fetch customers by last name
@@ -42,10 +48,18 @@ public class RunModern {
     repository.findByLastName("Bauer").forEach(bauer -> {
       log.info(bauer.toString());
     });
-    // for (Customer bauer : repository.findByLastName("Bauer")) {
-    // log.info(bauer.toString());
-    // }
     log.info("");
+
+    log.info(
+        "Customer found with findBylastNameAndFirstName('Bauer', 'Jack'):");
+    log.info("--------------------------------------------");
+    repository.findByLastNameAndFirstName("Bauer", "Jack").forEach(bauer -> {
+      log.info(bauer.toString());
+    });
+//    // for (Customer bauer : repository.findByLastName("Bauer")) {
+//    // log.info(bauer.toString());
+//    // }
+//    log.info("");
   }
 
 }

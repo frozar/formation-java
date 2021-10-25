@@ -18,6 +18,8 @@ public class Customer {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String firstName;
+//  @Column(name="LAST_NAAME", nullable=false, length=512)
+//  @Column(name = "LAST_NAAME")
   private String lastName;
 
   protected Customer() {

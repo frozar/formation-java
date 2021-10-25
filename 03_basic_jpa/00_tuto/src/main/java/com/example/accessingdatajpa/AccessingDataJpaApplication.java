@@ -15,19 +15,22 @@ public class AccessingDataJpaApplication {
       .getLogger(AccessingDataJpaApplication.class);
 
   public static void main(String[] args) {
+    System.out.println("Pass main BEFORE");
     ApplicationContext context = SpringApplication
         .run(AccessingDataJpaApplication.class);
+    System.out.println("Pass main AFTER");
 
-//    RunModern runModern = context.getBean(RunModern.class);
-//    runModern.execute();
-    RunEntityManager runEntityManager = context.getBean(RunEntityManager.class);
-    runEntityManager.execute();
+    RunModern runModern = context.getBean(RunModern.class);
+    runModern.execute();
+//    RunEntityManager runEntityManager = context.getBean(RunEntityManager.class);
+//    runEntityManager.execute();
   }
 
   // Run at startup of the application
   @Bean
   public CommandLineRunner demo(CustomerRepository repository) {
     return (args) -> {
+//      System.out.println("Pass CommandLineRunner");
     };
   }
 

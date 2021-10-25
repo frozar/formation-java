@@ -85,7 +85,7 @@ public class RunEntityManager {
     log.info("fetch individual: Customer found with a native query:");
     log.info("-------------------------------");
     Customer nativeQueryOneCustomer = (Customer) entityManager
-        .createNativeQuery("SELECT * from Customer where id = 1",
+        .createNativeQuery("SELECT * FROM CUSTOMER WHERE id = 1",
             Customer.class)
         .getSingleResult();
     log.info(nativeQueryOneCustomer.toString());
@@ -96,7 +96,7 @@ public class RunEntityManager {
     log.info("fetch individual: Customer found with a JPQL query:");
     log.info("-------------------------------");
     Customer jpqlOneCustomer = entityManager
-        .createQuery("SELECT c from Customer c where c.id = 1", Customer.class)
+        .createQuery("SELECT c from Customer c Where c.id = 1", Customer.class)
         .getSingleResult();
     log.info(jpqlOneCustomer.toString());
     log.info("");
@@ -105,10 +105,10 @@ public class RunEntityManager {
     log.info(
         "fetch individual: Customer found with a JPQL query indexed parameter:");
     log.info("-------------------------------");
-    String jpqlIndexedParameterQuery = "SELECT c from Customer c where c.id = ?1";
+    String jpqlIndexedParameterQuery = "SELECT c from Customer c where c.id = ?2";
     TypedQuery<Customer> indexedParameterQuery = entityManager
         .createQuery(jpqlIndexedParameterQuery, Customer.class);
-    indexedParameterQuery.setParameter(1, 1L);
+    indexedParameterQuery.setParameter(2, 1L);
     Customer jpqlOptionIndexedParameterOneCustomer = indexedParameterQuery
         .getSingleResult();
     log.info(jpqlOptionIndexedParameterOneCustomer.toString());
@@ -137,7 +137,7 @@ public class RunEntityManager {
     log.info(namedParametrisedOneCustomer.toString());
     log.info("");
 
-    // ############# fetch customers by last name
+    // ############# fetch customer by last name
     // 0 - Native query
     log.info(
         "fetch last name: Customer found with native query and where clause:");
