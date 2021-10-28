@@ -25,8 +25,8 @@ public class Commune {
   // Departement.
   // interprétation de @ManyToOne : plusieurs Commune appartiennent à un
   // département
-//  @ManyToOne(fetch = FetchType.LAZY)
-  @ManyToOne(fetch = FetchType.EAGER)
+//  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "DEPARTEMENT_ID", nullable = false, updatable = false)
   private Departement departement;
 

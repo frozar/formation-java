@@ -47,7 +47,7 @@ public class AccessingDataJpaApplication {
       Commune saintBenoit = new Commune("Saint Benoit");
       saintBenoit.setDepartement(run);
       communeRepository.save(saintBenoit);
-      displayDB();
+      fetchService.displayDB();
 
       try {
         departementRepository.delete(run);
@@ -55,12 +55,13 @@ public class AccessingDataJpaApplication {
         log.error(e.getMessage());
       }
 
-      log.info("####### Supprimer les communes et département");
-      communeRepository.delete(saintDenis);
-      communeRepository.delete(saintBenoit);
-      departementRepository.delete(run);
-      displayDB();
-      fetchService.fetchBehavior();
+//      log.info("####### Supprimer les communes et département");
+//      communeRepository.delete(saintDenis);
+//      communeRepository.delete(saintBenoit);
+//      departementRepository.delete(run);
+////      displayDB();
+//      fetchService.displayDB();
+//      fetchService.fetchBehavior();
     };
   }
 
