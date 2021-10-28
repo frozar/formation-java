@@ -39,6 +39,13 @@ public class AccessingDataJpaApplication {
       departementRepository.save(reunion);
       communeRepository.save(saintDenis);
 
+      Departement mayotte = new Departement("Mayotte");
+      departementRepository.save(mayotte);
+
+      Commune communeMayotte = new Commune("Commune Mayotte");
+      communeMayotte.setDepartement(mayotte);
+      communeRepository.save(communeMayotte);
+
       displayService.displayDB();
 
       // Création d'un contexte d'exécution pour que la variable "run"
@@ -53,20 +60,20 @@ public class AccessingDataJpaApplication {
 
       displayService.displayDB();
 
-      log.info("####### Supprimer une commune");
-      communeRepository.deleteById(3L);
-      displayService.displayDB();
-
-      log.info("####### Modifier une commune");
-      Commune c = communeRepository.findById(2L).get();
-      c.setNom("Bras Panon");
-      communeRepository.save(c);
-      displayService.displayDB();
-
-      log.info("####### Supprimer la commune et le département");
-      communeRepository.deleteById(2L);
-      departementRepository.deleteById(1L);
-      displayService.displayDB();
+//      log.info("####### Supprimer une commune");
+//      communeRepository.deleteById(3L);
+//      displayService.displayDB();
+//
+//      log.info("####### Modifier une commune");
+//      Commune c = communeRepository.findById(2L).get();
+//      c.setNom("Bras Panon");
+//      communeRepository.save(c);
+//      displayService.displayDB();
+//
+//      log.info("####### Supprimer la commune et le département");
+//      communeRepository.deleteById(2L);
+//      departementRepository.deleteById(1L);
+//      displayService.displayDB();
     };
   }
 }

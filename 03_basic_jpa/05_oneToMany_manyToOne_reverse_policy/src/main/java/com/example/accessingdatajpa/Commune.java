@@ -24,7 +24,7 @@ public class Commune {
   // Departement.
   @ManyToOne(// cascade = CascadeType.ALL,
       fetch = FetchType.EAGER)
-  Departement departement;
+  private Departement departement;
 
   protected Commune() {
   }
