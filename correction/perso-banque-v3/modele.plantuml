@@ -1,0 +1,137 @@
+@startuml
+package entites {
+    class Personne {
+        -String nom
+        -String prenom
+    }
+    class Banque {
+        -String codeBanque
+        -UUID id
+        -int numCompte
+    }
+    abstract class CompteBancaire {
+        -String codeBanque
+        -String codeGuichet
+        -String numCompte
+        -String cle
+        -Double solde
+        -int numOperation
+        +String getRib()
+    }
+    class CompteCourant {
+    }
+    class CompteEpargne {
+        #Double txInteret
+    }
+    class Operation {
+        -int numOperation
+        -Date dateOperation
+        -String libelle
+        -Double montant
+    }
+    class CarteBancaire {
+        -UUID id
+        -String codePin
+        -String numCarte
+        -Date dateExpiration
+        +verifierPin(pin)
+    }
+}
+
+interface CrudRepository
+package dao {
+    interface BanqueDao<Banque, UUID>
+    interface CarteBancaireDao<CarteBancaire, UUID> {
+        Iterable<CarteBancaire> findByBanque(Banque banque)
+        CarteBancaire findByBanqueAndNumCarte(Banque banque, String numCarte)
+    }
+    interface CompteBancaireDao<CompteCourant, UUID> {
+        Iterable<CompteBancaire> findByBanque(Banque banque)
+    }
+    interface OperationDao<Operation, UUID> {
+        Iterable<Operation> findByCompte(CompteBancaire compte);
+    }
+    interface PersonneDao<Personne, UUID>
+    CrudRepository <|-- BanqueDao
+    CrudRepository <|-- CarteBancaireDao
+    CrudRepository <|-- CompteBancaireDao
+    CrudRepository <|-- OperationDao
+    CrudRepository <|-- PersonneDao
+}
+
+package services {
+    interface BanqueServiceInterface {
+        +public Banque creerBanque(String nomBanque)
+        +CompteCourant creerCompteCourant(BanqueDGFiP banque, Personne titulaire, String guichet, Double soldeInitial) throws CompteException
+        +CompteCourant creerCompteCourant(BanqueDGFiP banque, Personne titulaire, String guichet) throws CompteException
+        +CompteEpargne creerCompteEpargne(BanqueDGFiP banque, Personne titulaire, String guichet, Double soldeInitial, Double taux) throws CompteException
+        +CarteBancaire creerCarte(BanqueDGFiP banque, Personne titulaire, CompteCourant compte) throws CompteException
+        +void afficherSyntheseComptes(BanqueDGFiP banque)
+        +void afficherSyntheseCartes(BanqueDGFiP banque)
+    }
+    interface CompteBancaireServiceInterface {
+        +Operation creerOperation(CompteBancaire compte, String libelle, Double montant) throws CompteException
+        +void afficherSyntheseOperations(CompteBancaire compte)
+        +double calculerInteret(CompteEpargne compte)
+    }
+    interface PersonneServiceInterface {
+        +Personne creerPersonne(String nom, String prenom)
+    }
+}
+
+package services.impl {
+    class BanqueService <<Component>> {
+    }
+    class CompteBancaireService <<Component>> {
+        -Double calculerSolde(CompteBancaire compte)
+    }
+    class PersonneService <<Component>> {
+    }
+    class SystemeBancaire <<Component>> {
+    }
+}
+
+
+interface SystemeBancaireInterface {
+    +List<String> rechercherRIBCompteCarte(BanqueDGFiP banque, String numCarte) throws SystemeBancaireException;
+    +boolean verifierCodePin(BanqueDGFiP banque, String numCarte, String codePin) throws SystemeBancaireException;
+    +int creerOperation(BanqueDGFiP banque, String ribCompte, String libelle, Double montant) throws SystemeBancaireException;
+}
+
+class Gabier <<Component>> {
+    +void accessCompte(String numCarte, codePin) throws SystemeBancaireException
+    +int retirerEspeces(String ribCompte, Double montant) throws SystemeBancaireException    
+}
+
+
+CompteBancaire "1" *-- "0..n" Operation
+CompteBancaire <|--  CompteCourant
+CompteBancaire <|--  CompteEpargne
+CompteBancaire "1..n" -- "1" Personne : titulaire
+Personne "1" -- "0..n" CarteBancaire
+CompteCourant "1..n" -- "0..n" CarteBancaire
+Gabier --> SystemeBancaireInterface : systemeBancaire 
+Banque "1" *-- "0..n" CompteBancaire
+Banque "1" *-- "0..n" CarteBancaire
+
+Exception <|-- CompteException
+Exception <|-- SystemeBancaireException
+
+BanqueServiceInterface <|-- BanqueService
+CompteBancaireServiceInterface <|-- CompteBancaireService
+BanqueService --> BanqueDao : "banqueDao"
+BanqueService --> CompteBancaireDao : "compteBancaireDao"
+BanqueService --> CarteBancaireDao : "carteBancaireDao"
+BanqueService --> CompteBancaireServiceInterface : "compteBancaireService"
+
+CompteBancaireService --> OperationDao : "operationDao"
+CompteBancaireService --> CompteBancaireDao : "compteBancaireDao"
+
+PersonneServiceInterface <|-- PersonneService
+PersonneService --> PersonneDao : "personneDao"
+
+SystemeBancaireInterface <|-- SystemeBancaire
+SystemeBancaire --> CarteBancaireDao : "carteBancaireDao"
+SystemeBancaire --> CompteBancaireDao : "compteBancaireDao"
+SystemeBancaire --> CompteBancaireServiceInterface : "compteBancaireService"
+@enduml
