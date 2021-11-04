@@ -9,7 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import fr.gouv.finances.dgfip.banque.v2.CompteException;
@@ -23,7 +22,6 @@ import fr.gouv.finances.dgfip.banque.v2.entites.CompteEpargne;
 import fr.gouv.finances.dgfip.banque.v2.entites.Personne;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class BanqueServiceWithContextTest {
 
   @Autowired
@@ -164,11 +162,14 @@ public class BanqueServiceWithContextTest {
   }
 
   @Test
-//  @Transactional
+  @Transactional
   public void deleteCompteBancaire() throws Exception {
-    banqueService.deleteCompteBancaire("0000000000");
+    Banque banque = banqueService.deleteCompteBancaire("0000000000");
 
-    anotherTransaction();
+    System.err.println(
+        "banque.getSetCompteBancaire(): " + banque.getSetCompteBancaire());
+
+    // anotherTransaction();
 
 //    Banque maBanque = banqueService.getBanque("DGFIP");
 //    System.err.println(
@@ -177,71 +178,4 @@ public class BanqueServiceWithContextTest {
 //    assertEquals(maBanque.getSetCarte().size(), 2);
   }
 
-//  @Test
-//  public void creerCompteCourantTest() throws Exception {
-//    Banque maBanque = banqueService.creerBanque("DGFIP");
-//    Personne personne = personneService.creerPersonne("Blanchard", "Paulette");
-//    CompteCourant compteCourantInDB = banqueService.creerCompteCourant(maBanque,
-//        personne, "1234");
-//    assertTrue(compteCourantInDB.getTitulaire().equals(personne));
-//    assertTrue(compteCourantInDB.getBanque().equals(maBanque));
-//  }
-//
-//  @Test
-//  public void creerCompteCourantTest_Duplicate() throws Exception {
-//    Banque maBanque = banqueService.creerBanque("DGFIP");
-//    Personne personne = personneService.creerPersonne("Blanchard", "Paulette");
-//    banqueService.creerCompteCourant(maBanque, personne, "1234");
-//    CompteCourant compteCourantInDB2 = banqueService
-//        .creerCompteCourant(maBanque, personne, "1234");
-//
-//    assertNotEquals(Integer.parseInt(compteCourantInDB2.getNumCompte()), 0);
-//    assertEquals(Integer.parseInt(compteCourantInDB2.getNumCompte()), 1);
-//  }
-//
-//  @Test
-//  public void creerCompteCourantSoldeTest() throws Exception {
-//    Banque maBanque = banqueService.creerBanque("DGFIP");
-//    Personne personne = personneService.creerPersonne("Blanchard", "Paulette");
-//    CompteCourant compteCourantInDB = banqueService.creerCompteCourant(maBanque,
-//        personne, "1234", 1000.);
-//    assertEquals(compteCourantInDB.getSolde(), 1000.);
-//  }
-//
-//  @Test
-//  public void creerCompteEpargneTest() throws Exception {
-//    Banque maBanque = banqueService.creerBanque("DGFIP");
-//    Personne personne = personneService.creerPersonne("Blanchard", "Paulette");
-//    CompteEpargne compteEpargneInDB = banqueService.creerCompteEpargne(maBanque,
-//        personne, "1234", 1000., 5.);
-//    assertEquals(compteEpargneInDB.getSolde(), 1000.);
-//    assertEquals(compteEpargneInDB.getTxInteret(), 5.);
-//  }
-//
-//  @Test
-//  public void creerCarteBancaireTest() throws Exception {
-//    Banque maBanque = banqueService.creerBanque("DGFIP");
-//    Personne personne = personneService.creerPersonne("Blanchard", "Paulette");
-//    CompteCourant compteCourant = banqueService.creerCompteCourant(maBanque,
-//        personne, "1234");
-//    CarteBancaire carteBancaireInDB = banqueService.creerCarte(maBanque,
-//        personne, compteCourant);
-//    assertTrue(carteBancaireInDB.getTitulaire().equals(personne));
-//    assertTrue(carteBancaireInDB.getBanque().equals(maBanque));
-//    assertTrue(carteBancaireInDB.getCompteCourant().equals(compteCourant));
-//  }
-//
-//  @Test
-//  public void creerCarteBancaireTest_Duplicate() throws Exception {
-//    Banque maBanque = banqueService.creerBanque("DGFIP");
-//    Personne personne = personneService.creerPersonne("Blanchard", "Paulette");
-//    CompteCourant compteCourant = banqueService.creerCompteCourant(maBanque,
-//        personne, "1234");
-//    CarteBancaire carteBancaireInDB1 = banqueService.creerCarte(maBanque,
-//        personne, compteCourant);
-//    CarteBancaire carteBancaireInDB2 = banqueService.creerCarte(maBanque,
-//        personne, compteCourant);
-//    assertNotEquals(carteBancaireInDB1.getNumCarte(),
-//        carteBancaireInDB2.getNumCarte());
-//  }
 }

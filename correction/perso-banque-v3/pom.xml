@@ -10,9 +10,9 @@
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>fr.gouv.finances.dgfip.esi974</groupId>
-  <artifactId>perso.banque.v2</artifactId>
+  <artifactId>perso.banque.v3</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Banque_V2</name>
+  <name>Banque_V3</name>
   <description>Application Banque</description>
   <properties>
     <java.version>11</java.version>

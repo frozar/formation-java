@@ -32,7 +32,7 @@ public interface BanqueServiceInterface {
   public CompteBancaire updateCompteBancaire(String numCompte,
       Personne titulaire);
 
-  public void deleteCompteBancaire(String numCompte);
+  public Banque deleteCompteBancaire(String numCompte);
 
   public CarteBancaire creerCarte(Banque banque, Personne titulaire,
       CompteCourant compte) throws CompteException;

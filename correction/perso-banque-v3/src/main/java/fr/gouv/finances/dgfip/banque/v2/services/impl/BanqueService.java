@@ -120,7 +120,7 @@ public class BanqueService implements BanqueServiceInterface {
 
   @Override
   @Transactional
-  public void deleteCompteBancaire(String numCompte) {
+  public Banque deleteCompteBancaire(String numCompte) {
 
     CompteBancaire compteBancaire = getCompteBancaire(numCompte);
     if (compteBancaire != null) {
@@ -128,8 +128,13 @@ public class BanqueService implements BanqueServiceInterface {
         CompteCourant compteCourant = (CompteCourant) compteBancaire;
         carteBancaireDao.deleteAll(compteCourant.getSetCarte());
       }
+      Banque banque = compteBancaire.getBanque();
       compteBancaireDao.delete(compteBancaire);
+
+      banque.getSetCompteBancaire();
+      return banque;
     }
+    return null;
   }
 
   @Override

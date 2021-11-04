@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import fr.gouv.finances.dgfip.banque.v2.entites.Banque;
@@ -17,7 +16,6 @@ import fr.gouv.finances.dgfip.banque.v2.entites.CompteEpargne;
 import fr.gouv.finances.dgfip.banque.v2.entites.Personne;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class BanqueServiceTest {
 
   @Autowired
