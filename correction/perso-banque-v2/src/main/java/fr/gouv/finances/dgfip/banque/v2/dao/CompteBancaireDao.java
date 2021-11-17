@@ -9,4 +9,6 @@ import fr.gouv.finances.dgfip.banque.v2.entites.CompteBancaire;
 public interface CompteBancaireDao
     extends CrudRepository<CompteBancaire, UUID> {
 
+  CompteBancaire findByNumCompte(String numCompte);
+
 }

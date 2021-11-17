@@ -29,4 +29,9 @@ public class CompteEpargne extends CompteBancaire {
   public Double calculerInterets() {
     return txInteret * calculerSolde();
   }
+
+  public Double getTxInteret() {
+    return txInteret;
+  }
+
 }

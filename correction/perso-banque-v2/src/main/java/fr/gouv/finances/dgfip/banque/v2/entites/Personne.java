@@ -53,4 +53,10 @@ public class Personne {
   public void addCarte(CarteBancaire newCarteBancaire) {
     setCarte.add(newCarteBancaire);
   }
+
+  @Override
+  public String toString() {
+    return "Personne [id=" + id + ", nom=" + nom + ", prenom=" + prenom + "]";
+  }
+
 }

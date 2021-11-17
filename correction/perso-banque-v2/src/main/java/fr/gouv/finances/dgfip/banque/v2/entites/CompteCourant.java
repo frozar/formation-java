@@ -23,6 +23,12 @@ public class CompteCourant extends CompteBancaire {
     super(codeBanque, codeGuichet, numCompte, cle, solde);
   }
 
+  /********************************/
+  public Set<CarteBancaire> getSetCarte() {
+    return setCarte;
+  }
+
+  /********************************/
   public Double calculerSolde() {
     Double solde = this.solde;
     for (int i = 0; i < this.operations.size(); i++) {

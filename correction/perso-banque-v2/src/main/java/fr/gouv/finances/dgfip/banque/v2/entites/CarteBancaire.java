@@ -82,4 +82,11 @@ public class CarteBancaire {
     this.titulaire = titulaire;
   }
 
+  @Override
+  public String toString() {
+    return "CarteBancaire [id=" + id + ", titulaire=" + titulaire + ", codePin="
+        + codePin + ", numCarte=" + numCarte + ", dateExpiration="
+        + dateExpiration + "]";
+  }
+
 }

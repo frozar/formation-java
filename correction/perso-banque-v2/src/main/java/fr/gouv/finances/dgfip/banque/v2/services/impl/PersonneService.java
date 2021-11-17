@@ -18,4 +18,9 @@ public class PersonneService implements PersonneServiceInterface {
     return personneDao.save(new Personne(nom, prenom));
   }
 
+  @Override
+  public void deleteAllPersonne() {
+    personneDao.deleteAll();
+  }
+
 }

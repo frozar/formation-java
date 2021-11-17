@@ -8,4 +8,6 @@ import fr.gouv.finances.dgfip.banque.v2.entites.Banque;
 
 public interface BanqueDao extends CrudRepository<Banque, UUID> {
 
+  public Banque findByCodeBanque(String codeBanque);
+
 }

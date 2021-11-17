@@ -7,6 +7,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +38,23 @@ public class BanqueService implements BanqueServiceInterface {
   private PersonneDao personneDao;
 
   @Override
+  public List<Banque> listeBanque() {
+    return (List<Banque>) banqueDao.findAll();
+  }
+
+  @Override
   public Banque creerBanque(String nomBanque) {
     return banqueDao.save(new Banque(nomBanque));
+  }
+
+  @Override
+  public Banque getBanque(String nomBanque) {
+    Banque banqueInDB = banqueDao.findByCodeBanque(nomBanque);
+    if (banqueInDB != null) {
+      banqueInDB.getSetCompteBancaire();
+      banqueInDB.getSetCarte();
+    }
+    return banqueInDB;
   }
 
   @Override
@@ -82,6 +99,40 @@ public class BanqueService implements BanqueServiceInterface {
   }
 
   @Override
+  public CompteBancaire getCompteBancaire(String numCompte) {
+    return compteBancaireDao.findByNumCompte(numCompte);
+  }
+
+  @Override
+  public CompteBancaire updateCompteBancaire(String numCompte,
+      Personne titulaire) {
+
+    Personne personneInDB = personneDao.findByNomAndPrenom(titulaire.getNom(),
+        titulaire.getPrenom());
+    if (personneInDB == null) {
+      personneInDB = personneDao.save(titulaire);
+    }
+
+    CompteBancaire compteBancaire = getCompteBancaire(numCompte);
+    compteBancaire.setTitulaire(personneInDB);
+    return compteBancaireDao.save(compteBancaire);
+  }
+
+  @Override
+  @Transactional
+  public void deleteCompteBancaire(String numCompte) {
+
+    CompteBancaire compteBancaire = getCompteBancaire(numCompte);
+    if (compteBancaire != null) {
+      if (compteBancaire instanceof CompteCourant) {
+        CompteCourant compteCourant = (CompteCourant) compteBancaire;
+        carteBancaireDao.deleteAll(compteCourant.getSetCarte());
+      }
+      compteBancaireDao.delete(compteBancaire);
+    }
+  }
+
+  @Override
   public CarteBancaire creerCarte(Banque banque, Personne titulaire,
       CompteCourant compteCourant) throws CompteException {
 
@@ -101,14 +152,17 @@ public class BanqueService implements BanqueServiceInterface {
     newCarteBancaire.setCompteCourant(compteCourant);
     newCarteBancaire.setTitulaire(titulaire);
 
-    titulaire.addCarte(newCarteBancaire);
-    compteCourant.addCarte(newCarteBancaire);
-    banque.addCarte(newCarteBancaire);
+    CarteBancaire carteBancaireInDB = carteBancaireDao.save(newCarteBancaire);
+
+    titulaire.addCarte(carteBancaireInDB);
+    compteCourant.addCarte(carteBancaireInDB);
+    banque.addCarte(carteBancaireInDB);
     personneDao.save(titulaire);
     compteBancaireDao.save(compteCourant);
-    banqueDao.save(banque);
+    banque = banqueDao.save(banque);
 
-    return carteBancaireDao.save(newCarteBancaire);
+    return carteBancaireInDB;
+
   }
 
   @Override
@@ -174,6 +228,22 @@ public class BanqueService implements BanqueServiceInterface {
     compteCourant.addCarte(carte);
     banque.addCarte(carte);
     return carte;
+  }
+
+  @Override
+  public void deleteAllBanque() {
+    banqueDao.deleteAll();
+
+  }
+
+  @Override
+  public void deleteAllCompteBancaire() {
+    compteBancaireDao.deleteAll();
+  }
+
+  @Override
+  public void deleteAllCartebancaire() {
+    carteBancaireDao.deleteAll();
   }
 
 }

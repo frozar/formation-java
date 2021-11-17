@@ -9,9 +9,8 @@ public interface CompteBancaireServiceInterface {
 
   public Operation creerOperation(CompteBancaire compte, String libelle,
       Double montant) throws CompteException;
-  
-  public void afficherSyntheseOperations(CompteBancaire compte);
-  
-  public double calculerInteret(CompteEpargne compte);
 
+  public void afficherSyntheseOperations(CompteBancaire compte);
+
+  public double calculerInteret(CompteEpargne compte);
 }
