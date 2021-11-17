@@ -26,9 +26,10 @@ public class BasicController {
 
   @GetMapping("/greeting")
   public String greeting(
-      @RequestParam(name = "name", required = false, defaultValue = "World") String name,
+      @RequestParam(name = "name", required = false, defaultValue = "World") String nameArg,
+//      @RequestParam(name = "name", required = true) String nameArg,
       Model model) {
-    model.addAttribute("name", name);
+    model.addAttribute("name", nameArg);
     model.addAttribute("myVar", 42);
     model.addAttribute("myArray", Arrays.asList("toto", "titi"));
     return "greeting";

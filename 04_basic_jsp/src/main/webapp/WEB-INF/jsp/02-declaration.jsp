@@ -14,7 +14,8 @@
   <!-- Here is the declaration -->
   <%!String makeItLower(String data) {
     return data.toLowerCase();
-  }%>
+  }
+  %>
 
   <div class="container">
 

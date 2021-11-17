@@ -18,11 +18,12 @@
       <h1>Spring Boot Web JSP Example</h1>
       <h2>Hello, ${name}</h2>
       <h2>Answer to all questions, ${myVar}</h2>
+      <h2>An array raw: ${myArray}</h2>
       <h2>An array: [ ${myArray[0]}, ${myArray[1]} ]</h2>
 
       <h4>In JSTL style:</h4>
       <c:forEach items="${myArray}" var="item">
-				There is: <c:out value="${item}" />
+				JSTL: There is: <c:out value="${item}" />
         <br />
       </c:forEach>
 
