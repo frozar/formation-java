@@ -11,7 +11,7 @@ public class AddCompteCourantForm {
   private String prenom;
 
   @NotBlank(message = "Code guichet ?")
-  @Max(value = 10000, message = "Doit être < 10000")
+  @Max(value = 9999, message = "Doit être <= 9999")
   private String codeGuichet;
 
   public String getNom() {

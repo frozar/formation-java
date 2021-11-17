@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -28,7 +27,7 @@ import fr.gouv.finances.dgfip.banque.v1.services.PersonneServiceInterface;
 import fr.gouv.finances.dgfip.banque.v1.services.SystemeBancaireInterface;
 
 @Controller
-public class BanqueController implements WebMvcConfigurer {
+public class BanqueController {
 
   private final Banque banque = new Banque("DGFiP");
 
@@ -101,6 +100,7 @@ public class BanqueController implements WebMvcConfigurer {
       @Valid @ModelAttribute("addCompteCourantForm") AddCompteCourantForm compteCourantForm,
       BindingResult resultCompte, Model model) {
     if (resultCompte.hasErrors()) {
+      // System.out.println("model" + model);
       return "formAddCurrentAccount";
     }
 

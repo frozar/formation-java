@@ -8,7 +8,7 @@ import fr.gouv.finances.dgfip.banque.v1.entites.CompteEpargne;
 import fr.gouv.finances.dgfip.banque.v1.entites.Personne;
 
 public interface BanqueServiceInterface {
-  
+
   public CompteCourant creerCompteCourant(Banque banque, Personne titulaire,
       String guichet, Double soldeInitial) throws CompteException;
 
@@ -20,9 +20,9 @@ public interface BanqueServiceInterface {
 
   public CarteBancaire creerCarte(Banque banque, Personne titulaire,
       CompteCourant compte) throws CompteException;
-  
+
   public void afficherSyntheseComptes(Banque banque);
-  
+
   public void afficherSyntheseCartes(Banque banque);
 
 }

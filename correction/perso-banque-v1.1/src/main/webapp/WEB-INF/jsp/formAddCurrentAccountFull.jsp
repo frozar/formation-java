@@ -1,4 +1,3 @@
-<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
@@ -16,10 +15,17 @@
 <body>
 
   <h1>Nouveau compte courant</h1>
+  <div>Status: ${status}</div>
+  <br />
 
   <form action="add-current-account-full" method="POST">
     <div>
       <spring:bind path="personne.nom">
+        <div>Status: ${status}</div>
+        <div>Out: ${out}</div>
+        <div>Request: ${request}</div>
+        <div>Response: ${response}</div>
+        <div>Session: ${session}</div>
         <label>Nom : </label>
         <input type="text" name="${status.expression}"
           value="${status.value}"
@@ -111,7 +117,8 @@
         </c:if>
       </spring:bind>
     </div>
-    <br /> <input type="submit" value="Soumettre" />
+    <br />
+    <input type="submit" value="Soumettre" />
   </form>
 
 </body>
