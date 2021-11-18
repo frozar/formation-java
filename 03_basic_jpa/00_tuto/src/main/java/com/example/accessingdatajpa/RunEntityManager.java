@@ -20,10 +20,6 @@ public class RunEntityManager {
   @Autowired
   private EntityManagerFactory entityManagerFactory;
 
-//  @PersistenceContext
-//  private EntityManager entityManager;
-
-//  @Transactional
   @SuppressWarnings("unchecked")
   public void execute() {
     System.out.println("execute");
