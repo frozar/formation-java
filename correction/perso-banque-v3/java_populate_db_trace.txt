@@ -1,0 +1,175 @@
+-- schema.sql
+drop table if exists banque CASCADE ;
+drop table if exists carte_bancaire CASCADE ;
+drop table if exists compte_bancaire CASCADE ;
+drop table if exists compte_bancaire_operations CASCADE ;
+drop table if exists operation CASCADE ;
+drop table if exists personne CASCADE ;
+create table banque (id binary not null, code_banque varchar(255), numero_compte integer not null, primary key (id));
+create table carte_bancaire (id binary not null, code_pin varchar(255), date_expiration timestamp, num_carte varchar(255), banque_id binary, compte_courant_id binary, titulaire_id binary, primary key (id));
+create table compte_bancaire (dtype varchar(31) not null, id binary not null, cle varchar(255), code_banque varchar(255), code_guichet varchar(255), num_compte varchar(255), numero_operation integer not null, solde double, tx_interet double, banque_id binary, titulaire_id binary, primary key (id));
+create table compte_bancaire_operations (compte_bancaire_id binary not null, operations_id binary not null);
+create table operation (id binary not null, date_operation timestamp, libelle varchar(255), montant double, num_operation integer, primary key (id));
+create table personne (id binary not null, nom varchar(255), prenom varchar(255), primary key (id));
+alter table banque add constraint UK_3plaldnuw3rekjd003qd1m57p unique (code_banque);
+alter table compte_bancaire_operations add constraint UK_owq8j1022tayfl6o7eng4777s unique (operations_id);
+alter table carte_bancaire add constraint FK9fqnbax1ksjfwtuua0kq4jo87 foreign key (banque_id) references banque;
+alter table carte_bancaire add constraint FKqt51kotyrwi68q72gyssfx72n foreign key (compte_courant_id) references compte_bancaire;
+alter table carte_bancaire add constraint FKbvbxghky5h6jcyv3jcn259wyf foreign key (titulaire_id) references personne;
+alter table compte_bancaire add constraint FKbwtlktbulne1704o9686j4ss0 foreign key (banque_id) references banque;
+alter table compte_bancaire add constraint FK66hy7636ji95xhoa4o97rw1ts foreign key (titulaire_id) references personne;
+alter table compte_bancaire_operations add constraint FK4d3mcgqbbgsxt143dnvrl61lb foreign key (operations_id) references operation;
+alter table compte_bancaire_operations add constraint FKg75at5e3wkv95m6mgt28dcunp foreign key (compte_bancaire_id) references compte_bancaire;
+
+
+-- data.sql
+
+insert into banque (code_banque, numero_compte, id) values ('DGFIP', 0,  CAST('068468ad27014ff488d03a0ed66109e7' AS BINARY));
+insert into personne (nom, prenom, id) values ('Blanchard', 'Paulette', CAST('ed69e54c33a746b5965f2d41e367efbb' AS BINARY));
+insert into personne (nom, prenom, id) values ('Guibert', 'Dominique', CAST('cc25291867794e51ab44982004ab29da' AS BINARY));
+insert into personne (nom, prenom, id) values ('Guillou', 'Thibault', CAST('b9f66c781e894971b7869b7149a4ce94' AS BINARY));
+insert into personne (nom, prenom, id) values ('Labbe', 'André', CAST('d1c2c60973764d138a6d2d4a8e4466bd' AS BINARY));
+insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, dtype, id) values (CAST('068468ad27014ff488d03a0ed66109e7' AS BINARY), '99', 'DGFIP', '1234', '0000000000', 1, 0.0, CAST('ed69e54c33a746b5965f2d41e367efbb' AS BINARY), 'CompteCourant', CAST('52361e0154974d85b72519bca3af81c3' AS BINARY));
+insert into operation (date_operation, libelle, montant, num_operation, id) values (TO_TIMESTAMP('Nov 18 15:17:49 2021', 'Mon DD HH24:MI:SS YYYY'), 'Dépôt chèque', 100.0, 1, CAST('f2d4ae9c11314473aee03bc98ea02cf2' AS BINARY));
+insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, dtype, id) values (CAST('068468ad27014ff488d03a0ed66109e7' AS BINARY), '99', 'DGFIP', '1235', '0000000001', 1, 0.0, CAST('cc25291867794e51ab44982004ab29da' AS BINARY), 'CompteCourant', CAST('0ce1b9263f794edd9d59f113364634d9' AS BINARY));
+insert into operation (date_operation, libelle, montant, num_operation, id) values (TO_TIMESTAMP('Nov 18 15:17:49 2021', 'Mon DD HH24:MI:SS YYYY'), 'Dépôt espèces', 200.0, 1, CAST('66a3658735a34af28f715c78201f9033' AS BINARY));
+insert into operation (date_operation, libelle, montant, num_operation, id) values (TO_TIMESTAMP('Nov 18 15:17:49 2021', 'Mon DD HH24:MI:SS YYYY'), 'Débit', -50.0, 2, CAST('5207009803d84527ac3b70de22f57fd2' AS BINARY));
+insert into operation (date_operation, libelle, montant, num_operation, id) values (TO_TIMESTAMP('Nov 18 15:17:49 2021', 'Mon DD HH24:MI:SS YYYY'), 'Débit', -300.0, 3, CAST('8225aea08e9642969f435e859675e49e' AS BINARY));
+insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, tx_interet, dtype, id) values (CAST('068468ad27014ff488d03a0ed66109e7' AS BINARY), '99', 'DGFIP', '5677', '0000000002', 1, 3000.0, CAST('b9f66c781e894971b7869b7149a4ce94' AS BINARY), 0.02, 'CompteEpargne', CAST('b29273f60962479e954ccae6e092cc61' AS BINARY));
+insert into operation (date_operation, libelle, montant, num_operation, id) values (TO_TIMESTAMP('Nov 18 15:17:49 2021', 'Mon DD HH24:MI:SS YYYY'), 'Dépôt', 1000.0, 1, CAST('98b697ba9aaf4db894b517dd0d052cc6' AS BINARY));
+insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, tx_interet, dtype, id) values (CAST('068468ad27014ff488d03a0ed66109e7' AS BINARY), '99', 'DGFIP', '5678', '0000000003', 1, 10000.0, CAST('d1c2c60973764d138a6d2d4a8e4466bd' AS BINARY), 0.02, 'CompteEpargne', CAST('c8d5aa9d54524feba337f188a781ca17' AS BINARY));
+insert into carte_bancaire (banque_id, code_pin, compte_courant_id, date_expiration, num_carte, titulaire_id, id) values (CAST('068468ad27014ff488d03a0ed66109e7' AS BINARY), '5613', CAST('52361e0154974d85b72519bca3af81c3' AS BINARY), TO_TIMESTAMP('Nov 18 15:17:49 2024', 'Mon DD HH24:MI:SS YYYY'), '5532 8887 3018 1326', CAST('ed69e54c33a746b5965f2d41e367efbb' AS BINARY), CAST('db8427c09f604373a8b93fdaa20ff545' AS BINARY));
+insert into carte_bancaire (banque_id, code_pin, compte_courant_id, date_expiration, num_carte, titulaire_id, id) values (CAST('068468ad27014ff488d03a0ed66109e7' AS BINARY), '5613', CAST('52361e0154974d85b72519bca3af81c3' AS BINARY), TO_TIMESTAMP('Nov 18 15:17:49 2024', 'Mon DD HH24:MI:SS YYYY'), '5532 8887 3018 1326', CAST('cc25291867794e51ab44982004ab29da' AS BINARY), CAST('dc3b0c91ecd7a6f2c419ca033d37646f' AS BINARY));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- original
+Hibernate: insert into banque (code_banque, numero_compte, id) values (?, ?, ?)
+2021-11-18 15:17:49.474 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [DGFIP]
+2021-11-18 15:17:49.475 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [INTEGER] - [0]
+2021-11-18 15:17:49.476 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BINARY] - [068468ad-2701-4ff4-88d0-3a0ed66109e7]
+2021-11-18 15:17:49.495 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into personne (nom, prenom, id) values (?, ?, ?)
+Hibernate: insert into personne (nom, prenom, id) values (?, ?, ?)
+2021-11-18 15:17:49.496 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [Blanchard]
+2021-11-18 15:17:49.497 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Paulette]
+2021-11-18 15:17:49.498 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BINARY] - [ed69e54c-33a7-46b5-965f-2d41e367efbb]
+2021-11-18 15:17:49.503 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into personne (nom, prenom, id) values (?, ?, ?)
+Hibernate: insert into personne (nom, prenom, id) values (?, ?, ?)
+2021-11-18 15:17:49.504 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [Guibert]
+2021-11-18 15:17:49.509 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Dominique]
+2021-11-18 15:17:49.510 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BINARY] - [cc252918-6779-4e51-ab44-982004ab29da]
+2021-11-18 15:17:49.519 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into personne (nom, prenom, id) values (?, ?, ?)
+Hibernate: insert into personne (nom, prenom, id) values (?, ?, ?)
+2021-11-18 15:17:49.521 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [Guillou]
+2021-11-18 15:17:49.522 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Thibault]
+2021-11-18 15:17:49.523 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BINARY] - [b9f66c78-1e89-4971-b786-9b7149a4ce94]
+2021-11-18 15:17:49.528 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into personne (nom, prenom, id) values (?, ?, ?)
+Hibernate: insert into personne (nom, prenom, id) values (?, ?, ?)
+2021-11-18 15:17:49.530 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [Labbe]
+2021-11-18 15:17:49.531 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [André]
+2021-11-18 15:17:49.533 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BINARY] - [d1c2c609-7376-4d13-8a6d-2d4a8e4466bd]
+2021-11-18 15:17:49.547 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, dtype, id) values (?, ?, ?, ?, ?, ?, ?, ?, 'CompteCourant', ?)
+Hibernate: insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, dtype, id) values (?, ?, ?, ?, ?, ?, ?, ?, 'CompteCourant', ?)
+2021-11-18 15:17:49.552 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BINARY] - [068468ad-2701-4ff4-88d0-3a0ed66109e7]
+2021-11-18 15:17:49.553 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [99]
+2021-11-18 15:17:49.555 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [DGFIP]
+2021-11-18 15:17:49.555 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [1234]
+2021-11-18 15:17:49.556 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [0000000000]
+2021-11-18 15:17:49.558 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [INTEGER] - [1]
+2021-11-18 15:17:49.559 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [DOUBLE] - [0.0]
+2021-11-18 15:17:49.560 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BINARY] - [ed69e54c-33a7-46b5-965f-2d41e367efbb]
+2021-11-18 15:17:49.560 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BINARY] - [52361e01-5497-4d85-b725-19bca3af81c3]
+2021-11-18 15:17:49.572 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+Hibernate: insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+2021-11-18 15:17:49.592 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Thu Nov 18 15:17:49 GST 2021]
+2021-11-18 15:17:49.608 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Dépôt chèque]
+2021-11-18 15:17:49.610 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DOUBLE] - [100.0]
+2021-11-18 15:17:49.611 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [INTEGER] - [1]
+2021-11-18 15:17:49.612 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BINARY] - [f2d4ae9c-1131-4473-aee0-3bc98ea02cf2]
+2021-11-18 15:17:49.617 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, dtype, id) values (?, ?, ?, ?, ?, ?, ?, ?, 'CompteCourant', ?)
+Hibernate: insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, dtype, id) values (?, ?, ?, ?, ?, ?, ?, ?, 'CompteCourant', ?)
+2021-11-18 15:17:49.618 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BINARY] - [068468ad-2701-4ff4-88d0-3a0ed66109e7]
+2021-11-18 15:17:49.618 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [99]
+2021-11-18 15:17:49.620 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [DGFIP]
+2021-11-18 15:17:49.621 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [1235]
+2021-11-18 15:17:49.622 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [0000000001]
+2021-11-18 15:17:49.622 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [INTEGER] - [1]
+2021-11-18 15:17:49.627 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [DOUBLE] - [0.0]
+2021-11-18 15:17:49.628 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BINARY] - [cc252918-6779-4e51-ab44-982004ab29da]
+2021-11-18 15:17:49.628 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [BINARY] - [0ce1b926-3f79-4edd-9d59-f113364634d9]
+2021-11-18 15:17:49.638 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+Hibernate: insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+2021-11-18 15:17:49.639 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Thu Nov 18 15:17:49 GST 2021]
+2021-11-18 15:17:49.639 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Dépôt espèces]
+2021-11-18 15:17:49.639 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DOUBLE] - [200.0]
+2021-11-18 15:17:49.640 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [INTEGER] - [1]
+2021-11-18 15:17:49.640 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BINARY] - [66a36587-35a3-4af2-8f71-5c78201f9033]
+2021-11-18 15:17:49.645 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+Hibernate: insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+2021-11-18 15:17:49.646 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Thu Nov 18 15:17:49 GST 2021]
+2021-11-18 15:17:49.647 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Débit]
+2021-11-18 15:17:49.648 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DOUBLE] - [-50.0]
+2021-11-18 15:17:49.649 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [INTEGER] - [2]
+2021-11-18 15:17:49.649 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BINARY] - [52070098-03d8-4527-ac3b-70de22f57fd2]
+2021-11-18 15:17:49.651 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+Hibernate: insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+2021-11-18 15:17:49.652 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Thu Nov 18 15:17:49 GST 2021]
+2021-11-18 15:17:49.653 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Débit]
+2021-11-18 15:17:49.653 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DOUBLE] - [-300.0]
+2021-11-18 15:17:49.653 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [INTEGER] - [2]
+2021-11-18 15:17:49.653 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BINARY] - [8225aea0-8e96-4296-9f43-5e859675e49e]
+2021-11-18 15:17:49.662 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, tx_interet, dtype, id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'CompteEpargne', ?)
+Hibernate: insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, tx_interet, dtype, id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'CompteEpargne', ?)
+2021-11-18 15:17:49.667 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BINARY] - [068468ad-2701-4ff4-88d0-3a0ed66109e7]
+2021-11-18 15:17:49.668 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [99]
+2021-11-18 15:17:49.669 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [DGFIP]
+2021-11-18 15:17:49.670 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [5677]
+2021-11-18 15:17:49.671 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [0000000002]
+2021-11-18 15:17:49.673 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [INTEGER] - [1]
+2021-11-18 15:17:49.675 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [DOUBLE] - [3000.0]
+2021-11-18 15:17:49.676 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BINARY] - [b9f66c78-1e89-4971-b786-9b7149a4ce94]
+2021-11-18 15:17:49.677 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [DOUBLE] - [0.02]
+2021-11-18 15:17:49.678 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [BINARY] - [b29273f6-0962-479e-954c-cae6e092cc61]
+2021-11-18 15:17:49.686 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+Hibernate: insert into operation (date_operation, libelle, montant, num_operation, id) values (?, ?, ?, ?, ?)
+2021-11-18 15:17:49.688 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [TIMESTAMP] - [Thu Nov 18 15:17:49 GST 2021]
+2021-11-18 15:17:49.688 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [Dépôt]
+2021-11-18 15:17:49.689 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [DOUBLE] - [1000.0]
+2021-11-18 15:17:49.690 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [INTEGER] - [1]
+2021-11-18 15:17:49.690 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [BINARY] - [98b697ba-9aaf-4db8-94b5-17dd0d052cc6]
+2021-11-18 15:17:49.694 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, tx_interet, dtype, id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'CompteEpargne', ?)
+Hibernate: insert into compte_bancaire (banque_id, cle, code_banque, code_guichet, num_compte, numero_operation, solde, titulaire_id, tx_interet, dtype, id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'CompteEpargne', ?)
+2021-11-18 15:17:49.694 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BINARY] - [068468ad-2701-4ff4-88d0-3a0ed66109e7]
+2021-11-18 15:17:49.695 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [99]
+2021-11-18 15:17:49.695 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [VARCHAR] - [DGFIP]
+2021-11-18 15:17:49.695 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [VARCHAR] - [5678]
+2021-11-18 15:17:49.695 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [0000000003]
+2021-11-18 15:17:49.696 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [INTEGER] - [1]
+2021-11-18 15:17:49.696 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [DOUBLE] - [10000.0]
+2021-11-18 15:17:49.696 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [8] as [BINARY] - [d1c2c609-7376-4d13-8a6d-2d4a8e4466bd]
+2021-11-18 15:17:49.697 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [9] as [DOUBLE] - [0.02]
+2021-11-18 15:17:49.697 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [10] as [BINARY] - [c8d5aa9d-5452-4feb-a337-f188a781ca17]
+2021-11-18 15:17:49.707 DEBUG 19096 --- [           main] org.hibernate.SQL                        : insert into carte_bancaire (banque_id, code_pin, compte_courant_id, date_expiration, num_carte, titulaire_id, id) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into carte_bancaire (banque_id, code_pin, compte_courant_id, date_expiration, num_carte, titulaire_id, id) values (?, ?, ?, ?, ?, ?, ?)
+2021-11-18 15:17:49.708 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BINARY] - [068468ad-2701-4ff4-88d0-3a0ed66109e7]
+2021-11-18 15:17:49.708 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [2] as [VARCHAR] - [5613]
+2021-11-18 15:17:49.708 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [3] as [BINARY] - [52361e01-5497-4d85-b725-19bca3af81c3]
+2021-11-18 15:17:49.709 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [4] as [TIMESTAMP] - [Mon Nov 18 15:17:49 GST 2024]
+2021-11-18 15:17:49.709 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [5] as [VARCHAR] - [5532 8887 3018 1326]
+2021-11-18 15:17:49.709 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [6] as [BINARY] - [ed69e54c-33a7-46b5-965f-2d41e367efbb]
+2021-11-18 15:17:49.710 TRACE 19096 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [7] as [BINARY] - [db8427c0-9f60-4373-a8b9-3fdaa20ff545]
