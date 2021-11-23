@@ -10,9 +10,9 @@
     <version>2.5.0</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
-  
+
   <groupId>com.example.blog</groupId>
-  <artifactId>spring-boot-with-webflow-and-jsp-configured</artifactId>
+  <artifactId>05_basic_spring_web_flow</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -51,7 +51,7 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Thymeleaf <dependency> <groupId>org.springframework.boot</groupId> 
+    <!-- Thymeleaf <dependency> <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId> </dependency> -->
 
     <!-- JSTL for JSP -->
@@ -67,7 +67,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Need this to compile JSP, tomcat-embed-jasper version is not working, 
+    <!-- Need this to compile JSP, tomcat-embed-jasper version is not working,
       no idea why -->
     <dependency>
       <groupId>org.eclipse.jdt.core.compiler</groupId>
