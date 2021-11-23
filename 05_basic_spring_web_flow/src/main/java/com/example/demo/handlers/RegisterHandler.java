@@ -12,7 +12,6 @@ import com.example.demo.models.RegisterModel;
 public class RegisterHandler {
 
   public RegisterModel init() {
-    System.err.println("RegisterHandler.init");
     return new RegisterModel();
   }
 

@@ -1,6 +1,5 @@
 package com.example.demo.config;
 
-//import org.baeldung.spring.WebFlowConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +27,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
   @Bean
   public InternalResourceViewResolver viewResolver() {
     InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//    Class<?> i = jspViewResolver.class;
     viewResolver.setViewClass(JstlView.class);
     viewResolver.setPrefix("/WEB-INF/views/");
     viewResolver.setSuffix(".jsp");

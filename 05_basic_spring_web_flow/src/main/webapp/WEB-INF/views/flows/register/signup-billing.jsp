@@ -33,10 +33,10 @@
           <div class="form-group row">
             <div class="col-sm-10">
               <button type="submit" class="btn btn-secondary"
-                name="_eventId_personal"
+                name="_eventId_personalTransition"
               >&laquo; Previous (Personal)</button>
               <button type="submit" class="btn btn-primary"
-                name="_eventId_confirm"
+                name="_eventId_confirmTransition"
               >Next (Confirm) &raquo;</button>
             </div>
           </div>

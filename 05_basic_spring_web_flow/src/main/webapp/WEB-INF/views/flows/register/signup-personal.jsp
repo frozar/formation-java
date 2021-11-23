@@ -13,9 +13,11 @@
       <div class="col-md-12">
         <h1>Personal Information (Stage 1)</h1>
         <hr />
+        
         <a href="${flowExecutionUrl}&_eventId_home"
           class="btn btn-danger"
         >Home</a>
+        
         <sf:form method="POST"
           enctype="multipart/form-data"
           modelAttribute="personalInfo"
@@ -93,7 +95,7 @@
           <div class="form-group row">
             <div class="col-sm-10">
               <button type="submit" class="btn btn-primary"
-                name="_eventId_billing"
+                name="_eventId_billingAttempt"
               >Next (Billing) &raquo;</button>
             </div>
           </div>
