@@ -1,0 +1,26 @@
+# Quizz -- Eclipse Shortcut
+
+F3 : aller à la définition
+F4 : afficher type hierarchie d'une classe / interface
+Ctrl + Shift + O : ajout des imports manquants / réorganisation des imports
+Ctrl + Shift + R : rechercher un ressource dans tous les projets ouverts
+Ctrl + H : outil de recherche
+Alt + Left : revenir à la dernière position du curseur
+Alt + Right : revenir à la position suivante du curseur dans l'historique du curseur
+Ctrl + page up : navigation onglet
+Ctrl + page down : navigation onglet
+Alt + Shift + R : renommer une variable
+Alt + Shift + L : extraction de variable locale
+Alt + Shift + S : menu de génération de code source
+Ctrl + Space : extension de snippet / proposition d'autocompletion
+
+Ctrl + S : sauvegarde
+Ctrl + X : couper
+Ctrl + C : copier
+Ctrl + V : coller
+
+Ctrl + Shift + S : sauvegarde tous les buffers non sauvegardés
+Ctrl + F : recherche de chaine de caractères
+
+Ctrl + F11 : relance la dernière configuration d'exécution
+F11 : relance la dernière configuration d'exécution en mode debug

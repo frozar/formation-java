@@ -1,0 +1,33 @@
+Procédure pour installer postgresql sur Linux - Ubuntu :
+
+1. sudo apt update
+
+2. sudo apt install postgresql postgresql-contrib
+
+Configuration file '/etc/apt/apt.conf.d/01autoremove-postgresql'
+ ==> File on system created by you or by a script.
+ ==> File also in package provided by package maintainer.
+   What would you like to do about it ?  Your options are:
+    Y or I  : install the package maintainer's version
+    N or O  : keep your currently-installed version
+      D     : show the differences between the versions
+      Z     : start a shell to examine the situation
+ The default action is to keep your current version.
+*** 01autoremove-postgresql (Y/I/N/O/D/Z) [default=N] ? Y
+
+3. sudo apt-get install pgadmin3 
+
+sudo -u postgres psql
+postgres=# \q
+
+sudo -u postgres createuser --interactive
+Enter name of role to add: frozar
+Shall the new role be a superuser? (y/n) y
+
+createdb banque
+
+psql -d banque
+banque=# \conninfo
+banque=# \l
+banque=# \d
+banque=# ALTER USER frozar WITH PASSWORD 'toto';
